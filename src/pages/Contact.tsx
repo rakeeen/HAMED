@@ -15,6 +15,36 @@ export const Contact = () => {
     document.title = "Contact | Hamed Walid";
   }, []);
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      name: formData.get('name') as string,
+      email: formData.get('email') as string,
+      message: formData.get('message') as string,
+      _captcha: 'false'
+    };
+    
+    if (data.name && data.email && data.message) {
+      try {
+        await fetch(`https://formsubmit.co/ajax/${siteConfig.email}`, {
+            method: "POST",
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        setSubmitted(true);
+        e.currentTarget.reset();
+        setTimeout(() => setSubmitted(false), 5000);
+      } catch (error) {
+        console.error("Error submitting form", error);
+        alert("Failed to send message. Please try again.");
+      }
+    }
+  };
+
   return (
     <div className="pt-32 pb-24 px-6 max-w-7xl mx-auto" ref={containerRef}>
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
@@ -29,9 +59,7 @@ export const Contact = () => {
         {/* Contact Form Section */}
         <div className="gsap-reveal lg:col-span-7">
           <div className="gsap-reveal bg-surface-container rounded-3xl p-8 md:p-12 border border-white/5">
-            <form action={`https://formsubmit.co/${siteConfig.email}`} method="POST" className="space-y-8">
-              <input type="hidden" name="_captcha" value="false" />
-              <input type="hidden" name="_next" value="https://rakeeen.github.io/HAMED/#/contact" />
+            <form onSubmit={handleSubmit} className="space-y-8">
               <div className="space-y-2">
                 <label className="font-label text-[10px] uppercase tracking-[0.2em] text-secondary">Full Name</label>
                 <input 
