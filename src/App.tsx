@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { CustomCursor } from './components/ui/CustomCursor';
@@ -8,7 +8,7 @@ import { Projects } from './pages/Projects';
 import { About } from './pages/About';
 import { Contact } from './pages/Contact';
 import { ProjectDetail } from './pages/ProjectDetail';
-import { SiteProvider } from './context/SiteContext';
+import { SiteProvider, useSiteContext } from './context/SiteContext';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -18,21 +18,24 @@ const ScrollToTop = () => {
   return null;
 };
 
-const MainLayout = ({ children }: { children: React.ReactNode }) => (
-  <div className="bg-background text-white selection:bg-primary/30 min-h-screen font-sans flex flex-col">
-    <CustomCursor />
-    <Navbar />
-    <main className="flex-grow pt-16">
-      {children}
-    </main>
-    <Footer />
-  </div>
-);
+const MainLayout = ({ children }: { children: React.ReactNode }) => {
+  const { settings } = useSiteContext();
+  return (
+    <div className="bg-background text-white selection:bg-primary/30 min-h-screen font-sans flex flex-col">
+      {settings.showCursor && <CustomCursor />}
+      <Navbar />
+      <main className="flex-grow pt-16">
+        {children}
+      </main>
+      <Footer />
+    </div>
+  );
+};
 
 export default function App() {
   return (
     <SiteProvider>
-      <Router basename={import.meta.env.BASE_URL}>
+      <Router>
         <ScrollToTop />
         <MainLayout>
           <Routes>

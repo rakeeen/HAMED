@@ -54,7 +54,7 @@ export const ProjectDetail = () => {
 
       {/* Dynamic Sections from User Provided Components */}
       <ProjectInfo />
-      <ContentSections />
+      <ContentSections project={project} />
 
       {/* Project Navigation */}
       <section className="py-24 border-t border-white/5 px-6 max-w-7xl mx-auto">
