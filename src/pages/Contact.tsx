@@ -4,7 +4,6 @@ import { Send, Mail, Linkedin, Twitter, Palette, ArrowUpRight } from 'lucide-rea
 import { useSiteContext } from '../context/SiteContext';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 
-
 export const Contact = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { siteConfig } = useSiteContext();
@@ -16,6 +15,20 @@ export const Contact = () => {
     document.title = "Contact | Hamed Walid";
   }, []);
 
+  return (
+    <div className="pt-32 pb-24 px-6 max-w-7xl mx-auto" ref={containerRef}>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
+        {/* Headline Section */}
+        <div className="gsap-reveal lg:col-span-12 mb-8">
+          <span className="font-label text-secondary uppercase tracking-widest text-xs mb-4 block">Get in touch</span>
+          <h1 className="font-sans text-5xl md:text-7xl font-extrabold tracking-tighter text-white">
+            Let's build<br />something great.
+          </h1>
+        </div>
+
+        {/* Contact Form Section */}
+        <div className="gsap-reveal lg:col-span-7">
+          <div className="gsap-reveal bg-surface-container rounded-3xl p-8 md:p-12 border border-white/5">
             <form action={`https://formsubmit.co/${siteConfig.email}`} method="POST" className="space-y-8">
               <input type="hidden" name="_captcha" value="false" />
               <input type="hidden" name="_next" value="https://rakeeen.github.io/HAMED/#/contact" />
