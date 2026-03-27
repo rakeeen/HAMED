@@ -1,7 +1,8 @@
 import { motion } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
+import { Project } from "../../types";
 
-export const ProjectInfo = () => {
+export const ProjectInfo = ({ project }: { project?: Project }) => {
   return (
     <section className="bg-surface py-24 md:py-32">
       <div className="max-w-screen-2xl mx-auto px-8">
@@ -14,14 +15,9 @@ export const ProjectInfo = () => {
             viewport={{ once: true }}
             className="lg:col-span-7"
           >
-            <h2 className="font-headline text-white text-3xl md:text-4xl font-bold mb-10 tracking-tight">The Vision</h2>
-            <div className="space-y-6 text-secondary text-lg leading-relaxed max-w-2xl">
-              <p>
-                Brutal Flats represents a departure from the ornamental. It is a study in volume, light, and the inherent beauty of exposed concrete. The project aimed to create a sanctuary within the urban chaos by utilizing heavy massing to isolate sound while carving out large voids for natural illumination.
-              </p>
-              <p>
-                Every structural element serves a dual purpose as a visual anchor. The interface between the building and its inhabitants was designed to feel tactile—a physical experience rather than just a visual one.
-              </p>
+            <h2 className="font-headline text-white text-3xl md:text-4xl font-bold mb-10 tracking-tight">Overview</h2>
+            <div className="space-y-6 text-secondary text-lg leading-relaxed max-w-2xl whitespace-pre-wrap font-sans">
+              {project?.description || "A detailed case study is not available for this project yet. Please check back later."}
             </div>
           </motion.div>
 
@@ -37,35 +33,39 @@ export const ProjectInfo = () => {
               <div className="grid grid-cols-2 gap-8">
                 <div>
                   <span className="font-label text-secondary uppercase text-[10px] tracking-widest block mb-2">Role</span>
-                  <span className="text-white font-medium">Lead Designer</span>
+                  <span className="text-white font-medium">{project?.role || 'Lead Designer'}</span>
                 </div>
                 <div>
                   <span className="font-label text-secondary uppercase text-[10px] tracking-widest block mb-2">Timeline</span>
-                  <span className="text-white font-medium">18 Months</span>
+                  <span className="text-white font-medium">{project?.duration || 'N/A'}</span>
                 </div>
-                <div>
-                  <span className="font-label text-secondary uppercase text-[10px] tracking-widest block mb-2">Stack</span>
+                <div className="col-span-2">
+                  <span className="font-label text-secondary uppercase text-[10px] tracking-widest block mb-2">Tags</span>
                   <div className="flex flex-wrap gap-2 mt-2">
-                    {['CAD', 'BIM', 'RVT'].map(tag => (
+                    {(project?.tags || ['Conceptual']).map(tag => (
                       <span key={tag} className="px-3 py-1 bg-surface-container-high rounded-full text-[10px] font-label text-white uppercase tracking-wider">
                         {tag}
                       </span>
                     ))}
                   </div>
                 </div>
-                <div>
-                  <span className="font-label text-secondary uppercase text-[10px] tracking-widest block mb-2">Location</span>
-                  <span className="text-white font-medium">Berlin, DE</span>
+                <div className="col-span-2">
+                  <span className="font-label text-secondary uppercase text-[10px] tracking-widest block mb-2">Client</span>
+                  <span className="text-white font-medium">{project?.client || 'Confidential'}</span>
                 </div>
               </div>
               <div className="pt-6">
-                <a 
-                  className="inline-flex items-center gap-3 bg-white text-[#131313] px-8 py-4 font-headline font-bold text-sm tracking-tight hover:bg-secondary transition-colors group" 
-                  href="#"
-                >
-                  VIEW LIVE SITE
-                  <ArrowUpRight size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                </a>
+                {project?.link && (
+                  <a 
+                    className="inline-flex items-center gap-3 bg-white text-[#131313] px-8 py-4 font-headline font-bold text-sm tracking-tight hover:bg-neutral-200 transition-colors group rounded-full" 
+                    href={project.link}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    VIEW LIVE SITE
+                    <ArrowUpRight size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                  </a>
+                )}
               </div>
             </div>
           </motion.div>

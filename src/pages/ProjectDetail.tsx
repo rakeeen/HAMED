@@ -53,7 +53,7 @@ export const ProjectDetail = () => {
       </section>
 
       {/* Dynamic Sections from User Provided Components */}
-      <ProjectInfo />
+      <ProjectInfo project={project} />
       <ContentSections project={project} />
 
       {/* Project Navigation */}

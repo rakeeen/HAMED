@@ -31,9 +31,9 @@ export const ContentSections = ({ project }: { project?: Project }) => {
           viewport={{ once: true }}
           className="md:col-span-5 self-center"
         >
-          <h3 className="font-headline text-white text-4xl font-bold mb-6 tracking-tight">Materiality</h3>
-          <p className="text-secondary leading-relaxed">
-            We explored over 40 variations of concrete aggregate to achieve the specific textural depth required for the lobby walls. The goal was a surface that feels alive as light moves across it throughout the day.
+          <h3 className="font-headline text-white text-4xl font-bold mb-6 tracking-tight">The Strategy</h3>
+          <p className="text-secondary leading-relaxed font-sans whitespace-pre-wrap">
+            {project?.strategy || "This project required a complete rethinking of structural norms to meet the client's aggressive baseline metrics while remaining highly elegant."}
           </p>
         </motion.div>
         <motion.div 
@@ -54,25 +54,48 @@ export const ContentSections = ({ project }: { project?: Project }) => {
         </motion.div>
       </div>
 
-      {/* Immersive Image */}
-      <div className="max-w-screen-xl mx-auto px-8 pb-48">
-        <motion.div 
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="bg-surface-container-low aspect-video overflow-hidden"
-        >
-          <img 
-            alt="Studio View" 
-            className="w-full h-full object-cover" 
-            src={project?.detailImages?.[2] || siteConfig.siteImages?.projectDetail3 || ''}
-            referrerPolicy="no-referrer"
-          />
-        </motion.div>
-        <div className="mt-8 flex justify-end">
-          <span className="font-label text-secondary uppercase text-[10px] tracking-widest italic">Fig 04. Lighting Analysis on Main Atrium</span>
+      {project?.challenge && project?.solution && (
+      <div className="max-w-screen-2xl mx-auto px-8 pb-48">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-24">
+          <div className="bg-surface-container-low p-10 lg:p-16 rounded-[2.5rem] border border-white/5">
+            <span className="font-label text-xs uppercase tracking-widest text-primary mb-6 block">The Challenge</span>
+            <p className="text-white text-xl leading-relaxed font-sans whitespace-pre-wrap">
+              {project.challenge}
+            </p>
+          </div>
+          <div className="bg-primary/5 p-10 lg:p-16 rounded-[2.5rem] border border-primary/20 backdrop-blur-sm">
+            <span className="font-label text-xs uppercase tracking-widest text-primary mb-6 block">The Solution</span>
+            <p className="text-white text-xl leading-relaxed font-sans whitespace-pre-wrap">
+              {project.solution}
+            </p>
+          </div>
         </div>
+      </div>
+      )}
+
+      {/* Immersive Image or Architecture details */}
+      <div className="max-w-screen-xl mx-auto px-8 pb-48">
+        {project?.architecture ? (
+          <div className="bg-surface-container-low p-10 lg:p-16 rounded-3xl border border-white/10 text-white font-sans whitespace-pre-wrap leading-relaxed">
+             <span className="font-label text-xs uppercase tracking-widest text-primary mb-6 block">Architecture Highlights</span>
+             {project.architecture}
+          </div>
+        ) : (
+          <motion.div 
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="bg-surface-container-low aspect-video overflow-hidden rounded-3xl"
+          >
+            <img 
+              alt="Architecture View" 
+              className="w-full h-full object-cover" 
+              src={project?.detailImages?.[2] || siteConfig.siteImages?.projectDetail3 || ''}
+              referrerPolicy="no-referrer"
+            />
+          </motion.div>
+        )}
       </div>
     </section>
   );
