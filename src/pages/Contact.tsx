@@ -5,6 +5,7 @@ import { useSiteContext } from '../context/SiteContext';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import { db } from '../firebase';
 import { collection, addDoc, serverTimestamp, doc, updateDoc, increment, getDoc, setDoc } from 'firebase/firestore';
+import { motion, AnimatePresence } from 'motion/react';
 
 export const Contact = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -47,10 +48,9 @@ export const Contact = () => {
 
         setSubmitted(true);
         e.currentTarget.reset();
-        setTimeout(() => setSubmitted(false), 5000);
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error submitting form", error);
-        alert("Failed to send message. Please try again.");
+        setErrorModal(error.message || "Failed to send message. Please try again.");
       } finally {
         setIsSubmitting(false);
       }
@@ -110,7 +110,7 @@ export const Contact = () => {
                   className="bg-white text-on-primary px-10 py-4 rounded-full font-bold hover:bg-neutral-200 transition-all flex items-center gap-3 active:scale-95 disabled:opacity-50"
                 >
                   <Send size={18} />
-                  {isSubmitting ? 'Sending...' : submitted ? 'Message Sent!' : 'Send Message'}
+                  {isSubmitting ? 'Sending...' : 'Send Message'}
                 </button>
               </div>
             </form>
@@ -172,6 +172,65 @@ export const Contact = () => {
           </div>
         </div>
       </div>
+
+      <AnimatePresence>
+        {submitted && (
+          <motion.div 
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-md"
+          >
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              className="bg-surface-container border border-white/10 p-10 md:p-16 rounded-[2.5rem] max-w-lg w-full text-center shadow-2xl relative overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
+              <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-8 text-primary shadow-[0_0_30px_rgba(255,255,255,0.1)] border border-primary/30">
+                <Send size={32} />
+              </div>
+              <h3 className="font-sans text-3xl font-bold text-white mb-4">Message Sent</h3>
+              <p className="text-secondary text-lg leading-relaxed font-sans mb-10">
+                Thank you for reaching out. We have received your inquiry and will get back to you shortly.
+              </p>
+              <button 
+                 onClick={() => setSubmitted(false)}
+                 className="bg-white text-black font-bold uppercase tracking-widest text-xs px-8 py-4 rounded-full hover:bg-neutral-200 transition-all w-full active:scale-95"
+              >
+                Close & Return
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+
+        {errorModal && (
+          <motion.div 
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-md"
+          >
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              className="bg-surface-container border border-red-500/20 p-10 md:p-16 rounded-[2.5rem] max-w-lg w-full text-center shadow-2xl"
+            >
+              <div className="w-20 h-20 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-8 text-red-500 shadow-[0_0_30px_rgba(239,68,68,0.2)] border border-red-500/30">
+                <span className="text-3xl font-black">!</span>
+              </div>
+              <h3 className="font-sans text-2xl font-bold text-red-400 mb-4">Delivery Failed</h3>
+              <p className="text-red-200/70 text-sm leading-relaxed font-sans mb-10 font-mono whitespace-pre-wrap">
+                {errorModal}
+              </p>
+              <button 
+                 onClick={() => setErrorModal(null)}
+                 className="bg-red-500/20 text-red-400 border border-red-500/30 font-bold uppercase tracking-widest text-xs px-8 py-4 rounded-full hover:bg-red-500/30 transition-all w-full active:scale-95"
+              >
+                Dismiss Error
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
