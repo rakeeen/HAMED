@@ -9,6 +9,8 @@ import { About } from './pages/About';
 import { Contact } from './pages/Contact';
 import { ProjectDetail } from './pages/ProjectDetail';
 import { SiteProvider, useSiteContext } from './context/SiteContext';
+import { db } from './firebase';
+import { doc, getDoc, setDoc, updateDoc, increment } from 'firebase/firestore';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -20,6 +22,27 @@ const ScrollToTop = () => {
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const { settings } = useSiteContext();
+
+  useEffect(() => {
+    const trackVisit = async () => {
+      if (!sessionStorage.getItem('visited_hamed')) {
+        sessionStorage.setItem('visited_hamed', 'true');
+        try {
+          const ref = doc(db, 'analytics', 'main');
+          const snap = await getDoc(ref);
+          if (snap.exists()) {
+             await updateDoc(ref, { visitors: increment(1) });
+          } else {
+             await setDoc(ref, { visitors: 1, inquiries: 0 });
+          }
+        } catch (e) {
+          console.error("Analytics failure", e);
+        }
+      }
+    };
+    trackVisit();
+  }, []);
+
   return (
     <div className="bg-background text-white selection:bg-primary/30 min-h-screen font-sans flex flex-col">
       {settings.showCursor && <CustomCursor />}

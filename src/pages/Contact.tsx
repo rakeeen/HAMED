@@ -3,6 +3,8 @@ import { Button } from '../components/ui/Button';
 import { Send, Mail, Linkedin, Twitter, Palette, ArrowUpRight } from 'lucide-react';
 import { useSiteContext } from '../context/SiteContext';
 import { useScrollReveal } from '../hooks/useScrollReveal';
+import { db } from '../firebase';
+import { collection, addDoc, serverTimestamp, doc, updateDoc, increment, getDoc, setDoc } from 'firebase/firestore';
 
 export const Contact = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -15,32 +17,42 @@ export const Contact = () => {
     document.title = "Contact | Hamed Walid";
   }, []);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsSubmitting(true);
     const formData = new FormData(e.currentTarget);
     const data = {
       name: formData.get('name') as string,
       email: formData.get('email') as string,
       message: formData.get('message') as string,
-      _captcha: 'false'
     };
     
     if (data.name && data.email && data.message) {
       try {
-        await fetch(`https://formsubmit.co/ajax/${siteConfig.email}`, {
-            method: "POST",
-            headers: { 
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify(data)
+        await addDoc(collection(db, 'inquiries'), {
+          ...data,
+          createdAt: serverTimestamp(),
+          read: false
         });
+
+        const ref = doc(db, 'analytics', 'main');
+        const snap = await getDoc(ref);
+        if (snap.exists()) {
+           await updateDoc(ref, { inquiries: increment(1) });
+        } else {
+           await setDoc(ref, { visitors: 1, inquiries: 1 });
+        }
+
         setSubmitted(true);
         e.currentTarget.reset();
         setTimeout(() => setSubmitted(false), 5000);
       } catch (error) {
         console.error("Error submitting form", error);
         alert("Failed to send message. Please try again.");
+      } finally {
+        setIsSubmitting(false);
       }
     }
   };
@@ -94,10 +106,11 @@ export const Contact = () => {
               <div className="flex items-center gap-6 pt-4">
                 <button 
                   type="submit"
+                  disabled={isSubmitting}
                   className="bg-white text-on-primary px-10 py-4 rounded-full font-bold hover:bg-neutral-200 transition-all flex items-center gap-3 active:scale-95 disabled:opacity-50"
                 >
                   <Send size={18} />
-                  Send Message
+                  {isSubmitting ? 'Sending...' : submitted ? 'Message Sent!' : 'Send Message'}
                 </button>
               </div>
             </form>
