@@ -39,12 +39,16 @@ export const Contact = () => {
           read: false
         });
 
-        const ref = doc(db, 'analytics', 'main');
-        const snap = await getDoc(ref);
-        if (snap.exists()) {
-           await updateDoc(ref, { inquiries: increment(1) });
-        } else {
-           await setDoc(ref, { visitors: 1, inquiries: 1 });
+        try {
+          const ref = doc(db, 'analytics', 'main');
+          const snap = await getDoc(ref);
+          if (snap.exists()) {
+             await updateDoc(ref, { inquiries: increment(1) });
+          } else {
+             await setDoc(ref, { visitors: 1, inquiries: 1 });
+          }
+        } catch (e) {
+          console.warn("Analytics tracking bypassed due to security rules.", e);
         }
 
         setSubmitted(true);
@@ -152,8 +156,8 @@ export const Contact = () => {
           <div className="pt-8 border-t border-outline-variant/10">
             <p className="font-label text-[10px] uppercase tracking-widest text-secondary mb-4">Contact Info</p>
             <div className="space-y-2 font-sans font-medium text-white mb-8">
-              <p>{siteConfig.email}</p>
-              <p>+20 111 204 6671</p>
+              <a href={`mailto:${siteConfig.email}`} className="block hover:text-primary transition-colors">{siteConfig.email}</a>
+              <a href="https://wa.me/201112046671" target="_blank" rel="noreferrer" className="block hover:text-primary transition-colors">+20 111 204 6671</a>
             </div>
             
             <p className="font-label text-[10px] uppercase tracking-widest text-secondary mb-4">Location</p>
