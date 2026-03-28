@@ -4,7 +4,7 @@ import { ProjectCard } from '../ui/ProjectCard';
 
 export const FeaturedWork = () => {
   const { projects } = useSiteContext();
-  const featuredProjects = projects.filter(p => p.featured);
+  const featuredProjects = projects.filter(p => p.featured).slice(0, 4);
 
   return (
     <section className="gsap-reveal bg-surface-container-low py-24 px-6 md:px-12">

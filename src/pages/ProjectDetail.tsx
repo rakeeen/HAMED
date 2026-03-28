@@ -32,7 +32,7 @@ export const ProjectDetail = () => {
           <img 
             src={project.image} 
             alt={project.title} 
-            className="w-full h-full object-cover grayscale"
+            className="w-full h-full object-cover"
           />
         </motion.div>
         
