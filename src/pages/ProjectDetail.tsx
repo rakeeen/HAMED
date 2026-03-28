@@ -1,13 +1,11 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { motion } from 'motion/react';
 import { useSiteContext } from '../context/SiteContext';
 import { ProjectInfo } from '../components/project/ProjectInfo';
 import { ContentSections } from '../components/project/ContentSections';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useSEO } from '../hooks/useSEO';
-
-const cinematicEase = [0.16, 1, 0.3, 1];
+import { useProjectAnimations } from '../hooks/useProjectAnimations';
 
 export const ProjectDetail = () => {
   const { id } = useParams();
@@ -36,37 +34,31 @@ export const ProjectDetail = () => {
     }
   });
 
+  const containerRef = useProjectAnimations() as any;
+
   return (
-    <main className="bg-background min-h-screen">
+    <main ref={containerRef} className="bg-background min-h-screen">
       {/* Hero Header */}
       <section className="relative h-[85vh] flex items-end px-6 md:px-12 pb-16 overflow-hidden">
-        <motion.figure 
-          initial={{ scale: 1.1, opacity: 0 }}
-          animate={{ scale: 1, opacity: 0.8 }}
-          transition={{ duration: 2, ease: cinematicEase }}
-          className="absolute inset-0 m-0 p-0"
-        >
+        <figure className="absolute inset-0 m-0 p-0 gsap-parallax opacity-0">
           <img 
             src={project.image} 
             alt={project.title} 
             className="w-full h-full object-cover"
           />
-        </motion.figure>
+        </figure>
         
         <div className="relative z-10 max-w-7xl mx-auto w-full">
           <Link to="/projects" className="inline-flex items-center gap-2 text-secondary hover:text-white mb-8 transition-colors group">
             <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
             Back to Projects
           </Link>
-          <motion.h1 
-            initial={{ opacity: 0, y: 60 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.4, ease: cinematicEase, delay: 0.2 }}
-            className="text-6xl md:text-[10rem] font-black tracking-tighter text-white uppercase leading-none"
+          <h1 
+            className="text-6xl md:text-[10rem] font-black tracking-tighter text-white uppercase leading-none gsap-reveal"
             style={{ fontFamily: '"Roboto Flex", sans-serif' }}
           >
             {project.title}
-          </motion.h1>
+          </h1>
         </div>
       </section>
 

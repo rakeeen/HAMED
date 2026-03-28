@@ -1,8 +1,5 @@
-import { motion } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
 import { Project } from "../../types";
-
-const cinematicEase = [0.16, 1, 0.3, 1];
 
 export const ProjectInfo = ({ project }: { project?: Project }) => {
   return (
@@ -10,40 +7,24 @@ export const ProjectInfo = ({ project }: { project?: Project }) => {
       <div className="max-w-screen-2xl mx-auto px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 md:gap-24">
           {/* Left: Overview */}
-          <motion.div 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={{
-              hidden: {},
-              visible: { transition: { staggerChildren: 0.03 } }
-            }}
-            className="lg:col-span-7"
-          >
-            <motion.h2 variants={{ hidden: { opacity: 0, y: 50 }, visible: { opacity: 1, y: 0, transition: { duration: 1, ease: cinematicEase } } }} className="font-headline text-white text-3xl md:text-5xl font-bold mb-10 tracking-tight">Overview</motion.h2>
+          <div className="lg:col-span-7 gsap-stagger-container">
+            <h2 className="font-headline text-white text-3xl md:text-5xl font-bold mb-10 tracking-tight gsap-reveal">Overview</h2>
             <div className="space-y-6 text-secondary text-lg md:text-xl leading-relaxed max-w-2xl font-sans overflow-hidden">
               {(project?.description || "A detailed case study is not available for this project yet. Please check back later.")
                 .split(/\s+/)
                 .map((word, i) => (
-                  <motion.span 
+                  <span 
                     key={i} 
-                    variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: cinematicEase } } }} 
-                    className="inline-block mr-1.5"
+                    className="inline-block mr-1.5 gsap-stagger-item opacity-0"
                   >
                     {word}
-                  </motion.span>
+                  </span>
                 ))}
             </div>
-          </motion.div>
+          </div>
 
           {/* Right: Metadata */}
-          <motion.div 
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, ease: cinematicEase, delay: 0.1 }}
-            viewport={{ once: true }}
-            className="lg:col-span-5"
-          >
+          <div className="lg:col-span-5 gsap-reveal">
             <div className="bg-surface-container-low p-10 md:p-12 space-y-10 border border-white/5">
               <div className="grid grid-cols-2 gap-8">
                 <div>
@@ -83,7 +64,7 @@ export const ProjectInfo = ({ project }: { project?: Project }) => {
                 )}
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </article>
