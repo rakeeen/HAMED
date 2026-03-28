@@ -1,57 +1,147 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @import "tailwindcss";
 
 @theme {
+  /* === GSAP.com Exact Color System === */
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-label: "Space Grotesk", ui-monospace, SFMono-Regular, monospace;
+  --font-label: "Inter", ui-monospace, SFMono-Regular, monospace;
+  --font-headline: "Inter", ui-sans-serif, system-ui, sans-serif;
 
-  --color-background: #131313;
-  --color-surface: #131313;
-  --color-surface-container-lowest: #0e0e0e;
-  --color-surface-container-low: #1b1b1b;
-  --color-surface-container: #1f1f1f;
-  --color-surface-container-high: #2a2a2a;
-  --color-surface-container-highest: #353535;
-  --color-surface-bright: #393939;
-  
-  --color-primary: #E8DFD7;
-  --color-white: #E8DFD7;
-  --color-on-primary: #2f3131;
-  --color-secondary: #c7c6c6;
-  --color-outline: #8e9192;
-  --color-outline-variant: #444748;
-  
-  --radius-default: 0.25rem;
+  /* Core Backgrounds */
+  --color-background:               #0e100f;
+  --color-surface:                  #141614;
+  --color-surface-container-lowest: #0a0b0a;
+  --color-surface-container-low:    #181a18;
+  --color-surface-container:        #1e201e;
+  --color-surface-container-high:   #252725;
+  --color-surface-container-highest:#2d2f2d;
+  --color-surface-bright:           #fffce1;
+
+  /* Text */
+  --color-primary:           #fffce1;
+  --color-white:             #fffce1;
+  --color-on-primary:        #0e100f;
+  --color-secondary:         rgba(255, 252, 225, 0.55);
+  --color-outline:           rgba(255, 252, 225, 0.25);
+  --color-outline-variant:   rgba(255, 252, 225, 0.10);
+
+  /* GSAP Accent Green */
+  --color-accent:    #0ae448;
+  --color-accent-dark: #07c03a;
+  --color-accent-dim: rgba(10, 228, 72, 0.12);
+
+  --radius-default: 0.75rem;
 }
 
+/* ============================================================
+   BASE
+   ============================================================ */
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
   body {
-    @apply bg-background text-primary font-sans antialiased selection:bg-white selection:text-black;
+    background-color: #0e100f;
+    color: #fffce1;
+    font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  ::selection {
+    background-color: #0ae448;
+    color: #0e100f;
   }
 }
 
+/* ============================================================
+   UTILITIES
+   ============================================================ */
 @layer utilities {
+
+  /* GSAP-style text gradient */
   .text-gradient {
-    background: linear-gradient(180deg, #E8DFD7 0%, #a3a3a3 100%);
+    background: linear-gradient(135deg, #fffce1 0%, rgba(255,252,225,0.5) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
-  .metallic-gradient {
-    background: linear-gradient(180deg, #E8DFD7 0%, #E2E2E2 100%);
+  /* Accent glow */
+  .accent-glow {
+    box-shadow: 0 0 60px rgba(10, 228, 72, 0.25), 0 0 120px rgba(10, 228, 72, 0.10);
+  }
+  .text-accent-glow {
+    text-shadow: 0 0 40px rgba(10, 228, 72, 0.4);
   }
 
+  /* GSAP's curly bracket motif helper */
+  .bracket-label::before { content: '{ '; color: rgba(255,252,225,0.3); }
+  .bracket-label::after  { content: ' }'; color: rgba(255,252,225,0.3); }
+
+  /* Pill button utility */
+  .btn-accent {
+    background-color: #0ae448;
+    color: #0e100f;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    border-radius: 9999px;
+    padding: 0.625rem 1.5rem;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+  }
+  .btn-accent:hover {
+    background-color: #07c03a;
+    transform: translateY(-1px);
+  }
+
+  .btn-ghost {
+    border: 1px solid rgba(255,252,225,0.2);
+    color: #fffce1;
+    font-weight: 600;
+    border-radius: 9999px;
+    padding: 0.625rem 1.5rem;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+  .btn-ghost:hover {
+    border-color: #0ae448;
+    background-color: rgba(10, 228, 72, 0.06);
+  }
+
+  /* Glass card */
   .glass-panel {
-    @apply bg-surface-container/60 backdrop-blur-xl;
+    background: rgba(255,252,225,0.03);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,252,225,0.07);
+  }
+
+  /* Noise texture overlay */
+  .noise::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.04;
+    pointer-events: none;
+    border-radius: inherit;
   }
 }
 
+/* ============================================================
+   CURSOR OVERRIDE
+   ============================================================ */
 @media (pointer: fine) {
   html, body, *, *::before, *::after, a, button, input {
     cursor: none !important;
   }
 }
 
-input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active { -webkit-box-shadow: 0 0 0 30px #1E1E1E inset !important; -webkit-text-fill-color: white !important; transition: background-color 5000s ease-in-out 0s; }
-
+/* ============================================================
+   AUTOFILL
+   ============================================================ */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #1e201e inset !important;
+  -webkit-text-fill-color: #fffce1 !important;
+  transition: background-color 5000s ease-in-out 0s;
+}

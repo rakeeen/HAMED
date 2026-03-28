@@ -52,10 +52,10 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <div className="bg-background text-white selection:bg-primary/30 min-h-screen font-sans flex flex-col">
+    <div className="min-h-screen font-sans flex flex-col" style={{ background: '#0e100f', color: '#fffce1' }}>
       {settings.showCursor && <CustomCursor />}
       <Navbar />
-      <main className="flex-grow pt-16">
+      <main className="flex-grow pt-[60px]">
         {children}
       </main>
       <Footer />

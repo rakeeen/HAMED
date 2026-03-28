@@ -4,72 +4,72 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
+/**
+ * Site-wide GSAP scroll engine.
+ * Apply classes to elements: .gsap-reveal, .gsap-parallax, .gsap-stagger-container / .gsap-stagger-item
+ */
 export const useProjectAnimations = () => {
   const containerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
 
-    let ctx = gsap.context(() => {
-      // Basic block fade-ups
-      const reveals = gsap.utils.toArray('.gsap-reveal');
-      reveals.forEach((element: any) => {
-        gsap.from(element, {
-          y: 40,
-          opacity: 0,
-          duration: 1.2,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: element,
-            start: 'top 85%',
-            toggleActions: 'play none none none',
-          }
-        });
+    const ctx = gsap.context(() => {
+      // Batch fade-up for all .gsap-reveal elements
+      ScrollTrigger.batch('.gsap-reveal', {
+        start: 'top 88%',
+        onEnter: (batch) => {
+          gsap.to(batch, {
+            opacity: 1,
+            y: 0,
+            stagger: 0.08,
+            duration: 1,
+            ease: 'power3.out',
+          });
+        },
+        once: true,
       });
 
-      // Hero Parallax Scrubber
-      const heroImage = document.querySelector('.gsap-parallax');
-      if (heroImage) {
-        gsap.fromTo(heroImage, 
-          { scale: 1.1, opacity: 0 },
-          { 
-            scale: 1, 
-            opacity: 0.8, 
-            duration: 1.5,
-            ease: 'power3.out'
-          }
-        );
+      // Initial state for reveals
+      gsap.set('.gsap-reveal', { opacity: 0, y: 40 });
 
-        gsap.to(heroImage, {
-          yPercent: 20,
+      // Hero parallax scrub
+      const heroImg = document.querySelector('.gsap-parallax');
+      if (heroImg) {
+        gsap.fromTo(
+          heroImg,
+          { scale: 1.08, opacity: 0 },
+          { scale: 1, opacity: 0.8, duration: 1.8, ease: 'power3.out' }
+        );
+        gsap.to(heroImg, {
+          yPercent: 18,
           ease: 'none',
           scrollTrigger: {
-            trigger: heroImage.parentElement,
+            trigger: (heroImg as HTMLElement).parentElement,
             start: 'top top',
             end: 'bottom top',
-            scrub: true,
-          }
+            scrub: 1.5,
+          },
         });
       }
 
-      // Staggered Text Arrays
-      const staggers = gsap.utils.toArray('.gsap-stagger-container');
-      staggers.forEach((container: any) => {
-        const chars = container.querySelectorAll('.gsap-stagger-item');
-        if (chars.length) {
-          gsap.from(chars, {
-            opacity: 0,
-            y: 30,
-            stagger: 0.03,
-            duration: 1,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: container,
-              start: 'top 85%',
-              toggleActions: 'play none none none',
-            }
-          });
-        }
+      // Stagger containers
+      const staggers = gsap.utils.toArray<HTMLElement>('.gsap-stagger-container');
+      staggers.forEach(container => {
+        const items = container.querySelectorAll('.gsap-stagger-item');
+        if (!items.length) return;
+        gsap.from(items, {
+          opacity: 0,
+          y: 25,
+          stagger: 0.04,
+          duration: 1,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: container,
+            start: 'top 85%',
+            toggleActions: 'play none none none',
+          },
+        });
       });
     }, containerRef);
 
