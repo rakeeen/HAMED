@@ -11,15 +11,28 @@ export const ProjectInfo = ({ project }: { project?: Project }) => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 md:gap-24">
           {/* Left: Overview */}
           <motion.div 
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, ease: cinematicEase }}
-            viewport={{ once: true }}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={{
+              hidden: {},
+              visible: { transition: { staggerChildren: 0.03 } }
+            }}
             className="lg:col-span-7"
           >
-            <h2 className="font-headline text-white text-3xl md:text-4xl font-bold mb-10 tracking-tight">Overview</h2>
-            <div className="space-y-6 text-secondary text-lg leading-relaxed max-w-2xl whitespace-pre-wrap font-sans">
-              {project?.description || "A detailed case study is not available for this project yet. Please check back later."}
+            <motion.h2 variants={{ hidden: { opacity: 0, y: 50 }, visible: { opacity: 1, y: 0, transition: { duration: 1, ease: cinematicEase } } }} className="font-headline text-white text-3xl md:text-5xl font-bold mb-10 tracking-tight">Overview</motion.h2>
+            <div className="space-y-6 text-secondary text-lg md:text-xl leading-relaxed max-w-2xl font-sans overflow-hidden">
+              {(project?.description || "A detailed case study is not available for this project yet. Please check back later.")
+                .split(/\s+/)
+                .map((word, i) => (
+                  <motion.span 
+                    key={i} 
+                    variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: cinematicEase } } }} 
+                    className="inline-block mr-1.5"
+                  >
+                    {word}
+                  </motion.span>
+                ))}
             </div>
           </motion.div>
 
