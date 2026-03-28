@@ -11,6 +11,7 @@ import { ProjectDetail } from './pages/ProjectDetail';
 import { SiteProvider, useSiteContext } from './context/SiteContext';
 import { db } from './firebase';
 import { doc, getDoc, setDoc, updateDoc, increment } from 'firebase/firestore';
+import { useSEO } from './hooks/useSEO';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -21,7 +22,14 @@ const ScrollToTop = () => {
 };
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
-  const { settings } = useSiteContext();
+  const { settings, siteConfig } = useSiteContext();
+
+  useSEO({
+    title: "Portfolio",
+    description: siteConfig.summary || "Product-Focused UI/UX Designer crafting seamless experiences.",
+    image: siteConfig.siteImages?.aboutPortrait,
+    path: "/"
+  });
 
   useEffect(() => {
     const trackVisit = async () => {

@@ -5,6 +5,9 @@ import { useSiteContext } from '../context/SiteContext';
 import { ProjectInfo } from '../components/project/ProjectInfo';
 import { ContentSections } from '../components/project/ContentSections';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { useSEO } from '../hooks/useSEO';
+
+const cinematicEase = [0.16, 1, 0.3, 1];
 
 export const ProjectDetail = () => {
   const { id } = useParams();
@@ -15,26 +18,40 @@ export const ProjectDetail = () => {
   const prevProject = projectIndex > 0 ? projects[projectIndex - 1] : null;
   const nextProject = projectIndex < projects.length - 1 ? projects[projectIndex + 1] : null;
 
-  React.useEffect(() => {
-    document.title = `${project.title} | Hamed Walid`;
-  }, [project]);
+  useSEO({
+    title: project.title,
+    description: project.description || `Case study detailing the strategy and impact of ${project.title}.`,
+    image: project.image,
+    path: `/project/${project.id}`,
+    schema: {
+      "@context": "https://schema.org",
+      "@type": "CreativeWork",
+      "name": project.title,
+      "description": project.description,
+      "image": project.image,
+      "author": {
+        "@type": "Person",
+        "name": "Hamed Walid"
+      }
+    }
+  });
 
   return (
-    <div className="bg-background min-h-screen">
+    <main className="bg-background min-h-screen">
       {/* Hero Header */}
-      <section className="relative h-[70vh] flex items-end px-6 md:px-12 pb-16 overflow-hidden">
-        <motion.div 
+      <section className="relative h-[85vh] flex items-end px-6 md:px-12 pb-16 overflow-hidden">
+        <motion.figure 
           initial={{ scale: 1.1, opacity: 0 }}
-          animate={{ scale: 1, opacity: 0.4 }}
-          transition={{ duration: 1.5 }}
-          className="absolute inset-0"
+          animate={{ scale: 1, opacity: 0.8 }}
+          transition={{ duration: 2, ease: cinematicEase }}
+          className="absolute inset-0 m-0 p-0"
         >
           <img 
             src={project.image} 
             alt={project.title} 
             className="w-full h-full object-cover"
           />
-        </motion.div>
+        </motion.figure>
         
         <div className="relative z-10 max-w-7xl mx-auto w-full">
           <Link to="/projects" className="inline-flex items-center gap-2 text-secondary hover:text-white mb-8 transition-colors group">
@@ -42,9 +59,10 @@ export const ProjectDetail = () => {
             Back to Projects
           </Link>
           <motion.h1 
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-6xl md:text-9xl font-black tracking-tighter text-white uppercase leading-none"
+            transition={{ duration: 1.4, ease: cinematicEase, delay: 0.2 }}
+            className="text-6xl md:text-[10rem] font-black tracking-tighter text-white uppercase leading-none"
             style={{ fontFamily: '"Roboto Flex", sans-serif' }}
           >
             {project.title}
@@ -57,7 +75,7 @@ export const ProjectDetail = () => {
       <ContentSections project={project} />
 
       {/* Project Navigation */}
-      <section className="py-24 border-t border-white/5 px-6 max-w-7xl mx-auto">
+      <nav className="py-24 border-t border-white/5 px-6 max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center gap-12">
           {/* Previous Project */}
           <div className={`flex flex-col gap-4 ${!prevProject ? 'opacity-30 pointer-events-none' : ''}`}>
@@ -85,7 +103,7 @@ export const ProjectDetail = () => {
             </Link>
           </div>
         </div>
-      </section>
-    </div>
+      </nav>
+    </main>
   );
 };

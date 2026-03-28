@@ -2,15 +2,17 @@ import { motion } from "motion/react";
 import { useSiteContext } from "../../context/SiteContext";
 import { Project } from "../../types";
 
+const cinematicEase = [0.16, 1, 0.3, 1];
+
 export const ContentSections = ({ project }: { project?: Project }) => {
   const { siteConfig } = useSiteContext();
   return (
-    <div className="bg-background">
+    <article className="bg-background">
       {/* 1. The Challenge (Problem Statement) */}
       {project?.challenge && (
         <section className="py-24 md:py-32 px-6 max-w-7xl mx-auto">
           <motion.div 
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 1.2, ease: cinematicEase }}
             className="max-w-4xl"
           >
             <span className="font-label text-secondary uppercase text-[10px] tracking-[0.3em] block mb-6">The Problem</span>
@@ -23,9 +25,9 @@ export const ContentSections = ({ project }: { project?: Project }) => {
 
       {/* 2. First Detail Visual (Architecture/Flow or wireframes) */}
       {(project?.detailImages?.[0] || siteConfig.siteImages?.projectDetail1) && (
-        <motion.section 
-          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 1 }}
-          className="w-full bg-surface-container-low"
+        <motion.figure 
+          initial={{ opacity: 0, scale: 0.98 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 1.5, ease: cinematicEase }}
+          className="w-full bg-surface-container-low m-0 p-0"
         >
           <img 
             alt="Project Overview Screen" 
@@ -33,15 +35,15 @@ export const ContentSections = ({ project }: { project?: Project }) => {
             src={project?.detailImages?.[0] || siteConfig.siteImages?.projectDetail1 || ''}
             referrerPolicy="no-referrer"
           />
-        </motion.section>
+        </motion.figure>
       )}
 
       {/* 3. The Strategy / Approach */}
       {project?.strategy && (
-        <section className="py-24 md:py-40 bg-surface">
+        <section className="py-32 md:py-48 bg-surface">
           <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-16 md:gap-24 items-center">
             <motion.div 
-               initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}
+               initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 1.2, ease: cinematicEase }}
                className="md:col-span-5"
             >
               <span className="font-label text-primary uppercase text-[10px] tracking-[0.3em] block mb-6">Strategy & Approach</span>
@@ -49,9 +51,9 @@ export const ContentSections = ({ project }: { project?: Project }) => {
                 {project.strategy}
               </p>
             </motion.div>
-            <motion.div 
-               initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.2 }}
-               className="md:col-span-7 rounded-[2.5rem] overflow-hidden border border-white/5"
+            <motion.figure 
+               initial={{ opacity: 0, scale: 0.95, y: 50 }} whileInView={{ opacity: 1, scale: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 1.4, ease: cinematicEase, delay: 0.2 }}
+               className="md:col-span-7 rounded-[2.5rem] overflow-hidden border border-white/5 m-0"
             >
               <img 
                 alt="Strategy Visual" 
@@ -59,7 +61,7 @@ export const ContentSections = ({ project }: { project?: Project }) => {
                 src={project?.detailImages?.[1] || siteConfig.siteImages?.projectDetail2 || ''}
                 referrerPolicy="no-referrer"
               />
-            </motion.div>
+            </motion.figure>
           </div>
         </section>
       )}
@@ -87,7 +89,7 @@ export const ContentSections = ({ project }: { project?: Project }) => {
           <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-primary/10 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2" />
           
           <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }}
+            initial={{ opacity: 0, scale: 0.95, y: 50 }} whileInView={{ opacity: 1, scale: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 1.5, ease: cinematicEase }}
             className="max-w-5xl mx-auto relative z-10 text-center"
           >
             <span className="font-label text-primary uppercase text-[10px] tracking-[0.3em] block mb-8">The Solution & Goals</span>
@@ -100,17 +102,20 @@ export const ContentSections = ({ project }: { project?: Project }) => {
 
       {/* 6. Final High-Fidelity Showcase */}
       {(project?.detailImages?.[2] || siteConfig.siteImages?.projectDetail3) && (
-        <section className="py-24 pb-48 w-full max-w-[2000px] mx-auto">
-          <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
+        <section className="py-24 pb-48 w-full max-w-[2000px] mx-auto overflow-hidden">
+          <motion.figure 
+            initial={{ opacity: 0, y: 100 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 1.6, ease: cinematicEase }}
+            className="m-0 p-0"
+          >
             <img 
               alt="Final Showcase" 
               className="w-full h-auto" 
               src={project?.detailImages?.[2] || siteConfig.siteImages?.projectDetail3 || ''}
               referrerPolicy="no-referrer"
             />
-          </motion.div>
+          </motion.figure>
         </section>
       )}
-    </div>
+    </article>
   );
 };

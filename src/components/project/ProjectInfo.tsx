@@ -2,16 +2,18 @@ import { motion } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
 import { Project } from "../../types";
 
+const cinematicEase = [0.16, 1, 0.3, 1];
+
 export const ProjectInfo = ({ project }: { project?: Project }) => {
   return (
-    <section className="bg-surface py-24 md:py-32">
+    <article className="bg-background py-24 md:py-32">
       <div className="max-w-screen-2xl mx-auto px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 md:gap-24">
           {/* Left: Overview */}
           <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.2, ease: cinematicEase }}
             viewport={{ once: true }}
             className="lg:col-span-7"
           >
@@ -23,9 +25,9 @@ export const ProjectInfo = ({ project }: { project?: Project }) => {
 
           {/* Right: Metadata */}
           <motion.div 
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.2, ease: cinematicEase, delay: 0.1 }}
             viewport={{ once: true }}
             className="lg:col-span-5"
           >
@@ -71,6 +73,6 @@ export const ProjectInfo = ({ project }: { project?: Project }) => {
           </motion.div>
         </div>
       </div>
-    </section>
+    </article>
   );
 };
