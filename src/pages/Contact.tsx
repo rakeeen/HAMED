@@ -25,6 +25,7 @@ export const Contact = () => {
     e.preventDefault();
     setIsSubmitting(true);
     const formData = new FormData(e.currentTarget);
+    const formEl = e.currentTarget as HTMLFormElement;
     const data = {
       name: formData.get('name') as string,
       email: formData.get('email') as string,
@@ -52,7 +53,7 @@ export const Contact = () => {
         }
 
         setSubmitted(true);
-        e.currentTarget.reset();
+        formEl.reset();
       } catch (error: any) {
         console.error("Error submitting form", error);
         setErrorModal(error.message || "Failed to send message. Please try again.");
@@ -156,8 +157,8 @@ export const Contact = () => {
           <div className="pt-8 border-t border-outline-variant/10">
             <p className="font-label text-[10px] uppercase tracking-widest text-secondary mb-4">Contact Info</p>
             <div className="space-y-2 font-sans font-medium text-white mb-8">
-              <a href={`mailto:${siteConfig.email}`} className="block hover:text-primary transition-colors">{siteConfig.email}</a>
-              <a href="https://wa.me/201112046671" target="_blank" rel="noreferrer" className="block hover:text-primary transition-colors">+20 111 204 6671</a>
+              <a href={`mailto:${siteConfig.email}`} className="block hover:text-primary transition-colors underline decoration-white/30 underline-offset-4">{siteConfig.email}</a>
+              <a href="https://wa.me/201112046671" target="_blank" rel="noreferrer" className="block hover:text-primary transition-colors underline decoration-white/30 underline-offset-4">+20 111 204 6671</a>
             </div>
             
             <p className="font-label text-[10px] uppercase tracking-widest text-secondary mb-4">Location</p>
