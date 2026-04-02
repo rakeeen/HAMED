@@ -1,0 +1,137 @@
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { LocalizedField } from '../types';
+
+type Language = 'en' | 'ar' | 'it';
+
+interface Translations {
+  [key: string]: {
+    en: string;
+    ar: string;
+    it: string;
+  };
+}
+
+const UI_TRANSLATIONS: Translations = {
+  home: { en: "Home", ar: "الرئيسية", it: "Home" },
+  projects: { en: "Projects", ar: "أعمالي", it: "Progetti" },
+  about: { en: "About", ar: "مين حامد؟", it: "Chi Sono" },
+  contact: { en: "Contact", ar: "كلمنا", it: "Contatto" },
+  selectedWorks: { en: "Selected Works", ar: "مشاريع مختارة", it: "Opere Selezionate" },
+  featured: { en: "// featured", ar: "// الأهم", it: "// in evidenza" },
+  viewAll: { en: "View All", ar: "شوف الكل", it: "Mostra Tutti" },
+  curious: { en: "Curious about the process? Check my full profile.", ar: "عايز تعرف بشتغل إزاي؟ شوف بروفايلي.", it: "Incuriosito dal processo? Guarda il mio profilo." },
+  moreAbout: { en: "More About Me", ar: "تِعرف عني أكتر", it: "Scopri di più" },
+  seeMyWork: { en: "See My Work", ar: "شوف الكام مشروع دول", it: "Vedi i Lavori" },
+  sayHello: { en: "Say Hello", ar: "قولي سلام", it: "Saluta" },
+  bridgingLogic: { en: 'Bridging complex logic with', ar: 'بربط منطق البيزنس المعقد بـ', it: 'Colmare la logica complessa con' },
+  humanCentered: { en: 'human-centered design.', ar: 'تصميم يخدم الناس صح.', it: 'design centrato sull\'uomo.' },
+  behindPixels: { en: "Behind the Pixels", ar: "ورا الكواليس", it: "Dietro i Pixel" },
+  myJourney: { en: "Where I've been", ar: "لفيت فين", it: "Il Mio Percorso" },
+  experience: { en: "// experience", ar: "// خبرتي", it: "// esperienza" },
+  myToolkit: { en: "My toolkit", ar: "عِدِّتي الترسانة", it: "I Miei Strumenti" },
+  skills: { en: "// skills", ar: "// مهاراتي", it: "// competenze" },
+  alwaysLooking: { en: "I am always looking for the next problem to solve. Don't hesitate to reach out!", ar: "دايماً بدور على المشكلة الجاية اللي محتاجة حل.. كلمني على طول!", it: "Cerco sempre la prossima sfida. Non esitare a contattarmi!" },
+  getInTouch: { en: "Let's collaborate", ar: "يلا نشتغل سوا", it: "Contattami" },
+  reachOut: { en: "Reach Out", ar: "ابعتلي رسالة", it: "Contatta" },
+  theGallery: { en: "The Gallery", ar: "المعرض", it: "La Galleria" },
+  curated: { en: "A curated collection — click anything to go deep.", ar: "تجميعه رايقة كده — دوس على أي حاجة وخد لفة.", it: "Una collezione curata — clicca per scoprire." },
+  wantMore: { en: "Want to see more? Let's talk.", ar: "حابب تشوف أكتر من كده؟ كلمني.", it: "Vuoi vedere altro? Parliamone." },
+  sendLetter: { en: "Send a Letter", ar: "ابعت رسالة بروح زمان", it: "Invia una Lettera" },
+  oldSchool: { en: "Old school vibes. New school response time.", ar: "طابع كلاسيكي، بس برد عليك طيارة.", it: "Atmosfera vintage. Tempi di risposta moderni." },
+  to: { en: "To:", ar: "لمين:", it: "A:" },
+  yourName: { en: "Your Name", ar: "اسمك إيه؟", it: "Il tuo Nome" },
+  yourEmail: { en: "Your Email", ar: "إيميلك", it: "La tua Email" },
+  yourMessage: { en: "Your Message", ar: "عايز تقول إيه؟", it: "Il tuo Messaggio" },
+  pressWax: { en: "Press the wax seal", ar: "ادعس على الختم ده", it: "Premi il sigillo" },
+  iRespond: { en: "I respond within 24hrs", ar: "برد في أقل من يوم", it: "Rispondo entro 24 ore" },
+  letterSent: { en: "Letter sent!", ar: "الرسالة طارت!", it: "Lettera inviata!" },
+  illGetBack: { en: "I'll get back to you, {name}. Promise.", ar: "هرد عليك قريب يا {name}، مفيش كلام.", it: "Ti risponderò presto, {name}. Promesso." },
+  sendAnother: { en: "Send Another", ar: "ابعت واحدة تانية", it: "Invia un'altra" },
+  backToProjects: { en: "← Back to Projects", ar: "← ارجع للأعمال", it: "← Torna ai Progetti" },
+  liveProject: { en: "Live Project ↗", ar: "المشروع شغال ↗", it: "Progetto Live ↗" },
+  sourceCode: { en: "Source Code", ar: "كود المشروع", it: "Codice Sorgente" },
+  theProblem: { en: "The Problem", ar: "المشكلة كانت إيه؟", it: "Il Problema" },
+  processFlow: { en: "Process & Flow", ar: "الخطة والترتيب", it: "Processo e Flusso" },
+  strategy: { en: "Strategy & Planning", ar: "الاستراتيجية", it: "Strategia e Pianificazione" },
+  theSolution: { en: "The Solution", ar: "وصلنا للحل إزاي؟", it: "La Soluzione" },
+  deepDive: { en: "Deep Dive", ar: "تفاصيل أكتر", it: "Approfondimento" },
+  visualDetails: { en: "Visual Details", ar: "حاجات عينك تحبها", it: "Dettagli Visivi" },
+  previous: { en: "Previous Project", ar: "المشروع السابق", it: "Progetto Precedente" },
+  upNext: { en: "Up Next", ar: "المشروع التالي", it: "Prossimo Progetto" },
+  madeBy: { en: "Hamed made this with love", ar: "حامد اللي عمل ده بكل حب", it: "Fatto con amore da Hamed" },
+  client: { en: "Client", ar: "العميل", it: "Cliente" },
+  role_label: { en: "Role", ar: "دوري كان إيه", it: "Ruolo" },
+  duration: { en: "Duration", ar: "الوقت", it: "Durata" },
+  tools_label: { en: "Tools", ar: "الأدوات", it: "Strumenti" },
+  bio_tagline: { en: "Figma · Adobe Suite · AI Workflows", ar: "فيجما · أدوبي · ذكاء اصطناعي", it: "Figma · Adobe Suite · Workflow IA" },
+  ph_name: { en: "Who's writing?", ar: "سجل اسمك هنا", it: "Chi scrive?" },
+  ph_email: { en: "So I can write back", ar: "عشان أعرف أرد عليك", it: "Così posso risponderti" },
+  ph_message: { en: "What's on your mind?", ar: "حابب تقول إيه؟", it: "Cosa hai in mente?" },
+  send_it: { en: "Send<br/>It!", ar: "طَيَّر<br/>الرسالة", it: "Invia!" },
+  step_research: { en: "Research", ar: "بحث وتحليل", it: "Ricerca" },
+  step_define: { en: "Define", ar: "تحديد المشكلة", it: "Definizione" },
+  step_wireframe: { en: "Wireframe", ar: "تخطيط أولى", it: "Wireframing" },
+  step_prototype: { en: "Prototype", ar: "بناء النموذج", it: "Prototipazione" },
+  step_test: { en: "Test", ar: "تجربة واختبار", it: "Testing" },
+  step_ship: { en: "Ship", ar: "إطلاق المنتج", it: "Lancio" },
+  role_fallback: { en: "Product Designer", ar: "مصمم منتجات", it: "Product Designer" },
+  duration_fallback: { en: "Project Timeline", ar: "مدة المشروع", it: "Cronologia Progetto" },
+  fill_fields: { en: "Please fill in your name, email and message.", ar: "يا ريت تملى اسمك وإيميلك والرسالة الأول.", it: "Per favore inserisci il tuo nome, email e messaggio." },
+  error_sending: { en: "Failed to send message. Please try again.", ar: "حصل مشكلة والرسالة متبعتتش.. جرب تاني كده؟", it: "Impossibile inviare il messaggio. Riprova." }
+};
+
+interface LangContextType {
+  lang: Language;
+  setLang: (lang: Language) => void;
+  t: (key: string, variables?: Record<string, string>) => string;
+  resolveField: (field?: LocalizedField) => string;
+}
+
+const LangContext = createContext<LangContextType | undefined>(undefined);
+
+export const LangProvider = ({ children }: { children: ReactNode }) => {
+  const [lang, setLang] = useState<Language>('en');
+
+  useEffect(() => {
+    // Check saved language
+    const saved = localStorage.getItem('site_lang') as Language;
+    if (saved && ['en', 'ar', 'it'].includes(saved)) {
+      setLang(saved);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('site_lang', lang);
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    if (lang === 'ar') {
+        document.documentElement.classList.add('rtl');
+    } else {
+        document.documentElement.classList.remove('rtl');
+    }
+  }, [lang]);
+
+  const t = (key: string, variables?: Record<string, string>) => {
+    const translation = UI_TRANSLATIONS[key]?.[lang] || UI_TRANSLATIONS[key]?.en || key;
+    if (!variables) return translation;
+    return Object.entries(variables).reduce((str, [k, v]) => str.replace(`{${k}}`, v), translation);
+  };
+
+  const resolveField = (field?: LocalizedField) => {
+    if (!field) return "";
+    if (typeof field === 'string') return field;
+    return field[lang] || field.en || "";
+  };
+
+  return (
+    <LangContext.Provider value={{ lang, setLang, t, resolveField }}>
+      {children}
+    </LangContext.Provider>
+  );
+};
+
+export const useLang = () => {
+  const context = useContext(LangContext);
+  if (!context) throw new Error('useLang must be used within a LangProvider');
+  return context;
+};
