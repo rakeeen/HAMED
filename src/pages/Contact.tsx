@@ -6,12 +6,42 @@ import { SketchyButton } from '../components/ui/SketchyButton';
 import { db } from '../firebase';
 import { collection, addDoc, serverTimestamp, doc, updateDoc, increment, getDoc, setDoc } from 'firebase/firestore';
 
+/* ─── Sketchy inline toast ─────────────────────── */
+const SketchyToast = ({ message, type, onClose }: { message: string; type: 'error' | 'warn'; onClose: () => void }) => (
+  <div
+    style={{
+      background: type === 'error' ? 'var(--rust)' : 'var(--sepia)',
+      color: 'white',
+      fontFamily: 'var(--font-sketch)',
+      fontSize: '0.95rem',
+      fontWeight: 700,
+      fontStyle: 'normal',
+      padding: '0.8rem 1.2rem',
+      borderRadius: '4px 16px 4px 16px',
+      boxShadow: '4px 5px 0 rgba(0,0,0,0.2)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: '1rem',
+      marginTop: '1rem',
+      animation: 'fadeIn 0.3s ease',
+    }}
+  >
+    <span>✕&nbsp; {message}</span>
+    <button
+      onClick={onClose}
+      style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '1.1rem', cursor: 'pointer', lineHeight: 1, opacity: 0.8 }}
+    >×</button>
+  </div>
+);
+
 export const Contact = () => {
   const { siteConfig } = useSiteContext();
   const { t, resolveField, lang } = useLang();
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [sent, setSent] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: 'error' | 'warn' } | null>(null);
 
   React.useEffect(() => {
     document.title = `${t('contact')} | ${resolveField(siteConfig.name)}`;
@@ -37,40 +67,59 @@ export const Contact = () => {
   const successHeading = resolve(cf?.successHeading,      t('letterSent'));
   const successBody    = resolve(cf?.successBody,         '');
   const responseTime   = resolve(cf?.responseTime,        t('iRespond'));
-  const formEnabled    = cf?.enabled !== false; // default true
+  const formEnabled    = cf?.enabled !== false;
+
+  // Extra contact info items from dashboard (array of { label, value, type })
+  const extraInfoItems: { label: any; value: string; type?: string }[] = cf?.extraInfo || [];
+
+  const showToast = (message: string, type: 'error' | 'warn' = 'error') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 4000);
+  };
 
   const handleSend = async () => {
-    if (formData.name && formData.email && formData.message) { 
-        setIsSubmitting(true);
-        try {
-            await addDoc(collection(db, 'inquiries'), {
-              ...formData,
-              createdAt: serverTimestamp(),
-              read: false
-            });
-    
-            try {
-              const ref = doc(db, 'analytics', 'main');
-              const snap = await getDoc(ref);
-              if (snap.exists()) {
-                 await updateDoc(ref, { inquiries: increment(1) });
-              } else {
-                 await setDoc(ref, { visitors: 1, inquiries: 1 });
-              }
-            } catch (e) {
-              console.warn("Analytics tracking bypassed due to security rules.", e);
-            }
-    
-            setSent(true);
-          } catch (error: any) {
-             console.error("Error submitting form", error);
-             alert(t('error_sending'));
-          } finally {
-             setIsSubmitting(false);
-          }
-    } else {
-        alert(t('fill_fields'));
+    if (!formData.name || !formData.email || !formData.message) {
+      showToast(t('fill_fields'), 'warn');
+      return;
     }
+
+    setIsSubmitting(true);
+    try {
+      await addDoc(collection(db, 'inquiries'), {
+        ...formData,
+        createdAt: serverTimestamp(),
+        read: false
+      });
+
+      try {
+        const ref = doc(db, 'analytics', 'main');
+        const snap = await getDoc(ref);
+        if (snap.exists()) {
+          await updateDoc(ref, { inquiries: increment(1) });
+        } else {
+          await setDoc(ref, { visitors: 1, inquiries: 1 });
+        }
+      } catch (e) {
+        console.warn("Analytics tracking bypassed due to security rules.", e);
+      }
+
+      setSent(true);
+    } catch (error: any) {
+      console.error("Error submitting form", error);
+      showToast(t('error_sending'), 'error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const labelStyle: React.CSSProperties = {
+    fontFamily: "var(--font-sketch)",
+    fontSize: "0.9rem",
+    color: "var(--ink-light)",
+    textTransform: "uppercase",
+    letterSpacing: "1px",
+    display: "block",
+    marginBottom: "0.3rem"
   };
 
   return (
@@ -95,17 +144,21 @@ export const Contact = () => {
           ) : !sent ? (
             <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
               <div>
-                <label style={{ fontFamily: "var(--font-sketch)", fontSize: "0.9rem", color: "var(--ink-light)", textTransform: "uppercase", letterSpacing: "1px", display: "block", marginBottom: "0.3rem" }}>{lblName}</label>
+                <label style={labelStyle}>{lblName}</label>
                 <input className="input-line" placeholder={phName} value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} disabled={isSubmitting} />
               </div>
               <div>
-                <label style={{ fontFamily: "var(--font-sketch)", fontSize: "0.9rem", color: "var(--ink-light)", textTransform: "uppercase", letterSpacing: "1px", display: "block", marginBottom: "0.3rem" }}>{lblEmail}</label>
+                <label style={labelStyle}>{lblEmail}</label>
                 <input className="input-line" type="email" placeholder={phEmail} value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} disabled={isSubmitting} />
               </div>
               <div>
-                <label style={{ fontFamily: "var(--font-sketch)", fontSize: "0.9rem", color: "var(--ink-light)", textTransform: "uppercase", letterSpacing: "1px", display: "block", marginBottom: "0.3rem" }}>{lblMessage}</label>
+                <label style={labelStyle}>{lblMessage}</label>
                 <textarea className="input-line" placeholder={phMessage} value={formData.message} onChange={e => setFormData({ ...formData, message: e.target.value })} disabled={isSubmitting} />
               </div>
+
+              {/* Custom inline toast — replaces native alert() */}
+              {toast && <SketchyToast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+
               <div style={{ display: "flex", alignItems: "center", gap: "2rem", marginTop: "1rem" }}>
                 <button className="wax-btn" onClick={handleSend} disabled={isSubmitting} style={{ opacity: isSubmitting ? 0.7 : 1 }}>
                   {isSubmitting ? '...' : <span dangerouslySetInnerHTML={{__html: btnText || t('send_it')}}/>}
@@ -127,6 +180,8 @@ export const Contact = () => {
         </div>
 
         <hr className="sketch-divider" />
+
+        {/* Social links + Extra Info Items from dashboard */}
         <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap", marginTop: "1rem" }}>
           {[
             ["Behance", siteConfig.socials.behance.replace('https://www.', '') || 'behance.net', siteConfig.socials.behance], 
@@ -136,6 +191,22 @@ export const Contact = () => {
             <div key={label as string}>
               <p style={{ fontFamily: "var(--font-sketch)", fontSize: "0.9rem", color: "var(--ink-light)", textTransform: "uppercase" }}>{label}</p>
               <a href={url as string} target="_blank" rel="noreferrer" style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "var(--sepia)", textDecoration: 'none' }}>{handle}</a>
+            </div>
+          ))}
+
+          {/* Extra info items (phone, address, etc.) from Firebase */}
+          {extraInfoItems.filter(item => item.value).map((item, i) => (
+            <div key={i}>
+              <p style={{ fontFamily: "var(--font-sketch)", fontSize: "0.9rem", color: "var(--ink-light)", textTransform: "uppercase" }}>
+                {resolve(item.label, '')}
+              </p>
+              {item.type === 'phone' ? (
+                <a href={`tel:${item.value}`} style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "var(--sepia)", textDecoration: 'none' }}>{item.value}</a>
+              ) : item.type === 'link' ? (
+                <a href={item.value} target="_blank" rel="noreferrer" style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "var(--sepia)", textDecoration: 'none' }}>{item.value}</a>
+              ) : (
+                <p style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "var(--sepia)" }}>{item.value}</p>
+              )}
             </div>
           ))}
         </div>
