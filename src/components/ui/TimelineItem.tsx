@@ -23,7 +23,8 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({ item, isLast }) => {
         <div style={{
           position: "absolute",
           insetInlineStart: "11px", // Moved in a bit for better visual weight
-          transform: "translateX(-50%)",
+          transform: "none",
+          marginInlineStart: "-0.75px", // Center the 1.5px border on the 11px mark
           top: "11px",
           bottom: "-14px",
           width: 0,
@@ -38,7 +39,8 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({ item, isLast }) => {
         style={{ 
           position: "absolute", 
           insetInlineStart: "11px",
-          transform: "translateX(-50%)",
+          transform: "none",
+          marginInlineStart: "-7px", // Center the 14px dot on the 11px mark
           top: "4px", 
           zIndex: 2,
           marginTop: 0

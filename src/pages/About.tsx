@@ -35,7 +35,7 @@ export const About = () => {
         <h2 style={{ fontFamily: "var(--font-sketch)", fontSize: "2rem", marginBottom: "2rem", color: "var(--ink)" }}>
           {t('myJourney')} <span style={{ color: "var(--ink-light)", fontSize: "1.2rem" }}>{t('experience')}</span>
         </h2>
-        <div style={{ display: "flex", flexDirection: "column", gap: 0, paddingLeft: "1rem" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 0, paddingInlineStart: "1rem" }}>
           {timeline.map((item, i) => (
             <TimelineItem key={i} item={item} isLast={i === timeline.length - 1} />
           ))}
