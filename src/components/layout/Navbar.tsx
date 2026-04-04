@@ -79,8 +79,6 @@ export const Navbar = () => {
           ))}
         </div>
         
-        {/* Hide Lang for now - per user request */}
-        {/*
         <div className={`custom-select-container ${isLangOpen ? 'active' : ''}`} onClick={() => setIsLangOpen(!isLangOpen)}>
           <div className="custom-select-trigger">
             {lang.toUpperCase()}
@@ -90,7 +88,8 @@ export const Navbar = () => {
               <div 
                 key={l} 
                 className={`custom-select-option ${lang === l ? 'selected' : ''}`}
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   setLang(l as any);
                   setIsLangOpen(false);
                 }}
@@ -100,7 +99,6 @@ export const Navbar = () => {
             ))}
           </div>
         </div>
-        */}
 
         {/* Theme Toggle SVG Icon */}
         <button 

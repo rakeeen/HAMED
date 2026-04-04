@@ -39,7 +39,7 @@ export const Home = () => {
             <SketchyButton onClick={() => navigate("/contact")}>{t('sayHello')}</SketchyButton>
           </div>
         </div>
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1.5rem" }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1.5rem", marginInlineStart: 'auto' }}>
           <div style={{ width: 220, height: 220, borderRadius: "50%", border: "3px solid var(--sepia)", overflow: "hidden", background: "var(--paper-dark)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "8px 10px 0 rgba(139,105,20,0.2)", position: "relative" }}>
             {siteConfig.siteImages?.aboutPortrait ? (
                 <img src={siteConfig.siteImages.aboutPortrait} alt={siteConfig.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />

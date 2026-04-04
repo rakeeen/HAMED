@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Space+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=IBM+Plex+Sans+Arabic:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap');
 
 /* =============================================
    DESIGN SYSTEM — Paper & Sketch Aesthetic
@@ -19,6 +19,7 @@
   --charcoal: #3a3530;
   --cream: #faf6ee;
   --tape: rgba(200,180,120,0.35);
+  --dot-color: rgba(42, 32, 24, 0.04);
 
   /* Dynamic Cards */
   --card-bg-1: #1a3a5a;
@@ -42,8 +43,9 @@
   --tag-txt-6: #1a3060;
 
   /* Typography */
-  --font-sketch: 'Cormorant Garamond', serif;
-  --font-body: 'Lora', serif;
+  --font-sketch: 'Playfair Display', Georgia, serif;
+  --font-body: 'Playfair Display', Georgia, serif;
+  --font-style-default: italic;
   --font-mono: 'Space Mono', monospace;
 
   /* Spacing */
@@ -73,6 +75,7 @@ body.dark {
   --charcoal: #e6dfd1;
   --cream: #12100e;
   --tape: rgba(233, 226, 210, 0.1);
+  --dot-color: rgba(233, 226, 210, 0.06);
 
   /* Dynamic Cards (Dark Mode) */
   --card-bg-1: #14283f;
@@ -96,10 +99,10 @@ body.dark {
   --tag-txt-6: #8da4db;
 }
 
-html.rtl {
-  --font-sketch: 'SF Pro Arabic Rounded', 'Cairo', system-ui, sans-serif;
-  --font-body: 'SF Pro Arabic Rounded', 'Cairo', system-ui, sans-serif;
-  --font-mono: 'SF Pro Arabic Rounded', 'Cairo', system-ui, monospace;
+html.rtl, [dir="rtl"] {
+  --font-sketch: 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  --font-body: 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Sans Arabic', system-ui, monospace;
 }
 
 html[dir="rtl"] select {
@@ -110,6 +113,7 @@ html[dir="rtl"] select {
 body {
   background: var(--paper);
   font-family: var(--font-body);
+  font-style: italic;
   color: var(--ink);
   overflow-x: hidden;
   cursor: none;
@@ -166,7 +170,7 @@ select:-webkit-autofill:focus {
 /* ── PAPER TEXTURE ── */
 .paper-texture {
   background-color: var(--paper);
-  background-image: radial-gradient(rgba(42, 32, 24, 0.04) 1.5px, transparent 1.5px);
+  background-image: radial-gradient(var(--dot-color) 1.5px, transparent 1.5px);
   background-size: 24px 24px;
   min-height: 100vh;
   transition: background-color 0.4s ease;
