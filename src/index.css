@@ -116,8 +116,11 @@ body {
   font-style: italic;
   color: var(--ink);
   overflow-x: hidden;
-  cursor: none;
   transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+@media (min-width: 768px) {
+   body { cursor: none; }
 }
 
 /* Custom Scrollbar */
@@ -140,9 +143,11 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Hide default cursor on interactive elements as well */
-*, a, button, input, textarea, select, .polaroid, .nav-link, .sketchy-btn, .wax-btn {
-  cursor: none !important;
+/* Hide default cursor only on desktop/tablets where a custom cursor exists */
+@media (min-width: 768px) {
+  *, a, button, input, textarea, select, .polaroid, .nav-link, .sketchy-btn, .wax-btn {
+    cursor: none !important;
+  }
 }
 
 ::selection {
@@ -380,7 +385,9 @@ textarea.input-line { resize: none; border: none; border-bottom: 1.5px solid var
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
   .polaroid { padding: 8px 8px 28px; }
-  .hero-grid { grid-template-columns: 1fr !important; }
+  .hero-grid { grid-template-columns: 1fr !important; gap: 4rem !important; text-align: center; }
+  .hero-portrait-col { margin: 0 auto !important; order: -1; }
+  .hero-text-col { text-align: center; display: flex; flex-direction: column; align-items: center; }
   .hide-mobile { display: none !important; }
 }
 @media (max-width: 600px) {
