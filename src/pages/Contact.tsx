@@ -8,7 +8,7 @@ import { collection, addDoc, serverTimestamp, doc, updateDoc, increment, getDoc,
 
 export const Contact = () => {
   const { siteConfig } = useSiteContext();
-  const { t, resolveField } = useLang();
+  const { t, resolveField, lang } = useLang();
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [sent, setSent] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -16,6 +16,28 @@ export const Contact = () => {
   React.useEffect(() => {
     document.title = `${t('contact')} | ${resolveField(siteConfig.name)}`;
   }, [t, resolveField, siteConfig.name]);
+
+  // Resolve contactForm fields from Firebase config, with fallbacks
+  const cf = (siteConfig as any).contactForm;
+  const resolve = (field: any, fallback: string) => {
+    if (!field) return fallback;
+    if (typeof field === 'string') return field;
+    return field[lang] || field.en || fallback;
+  };
+
+  const formHeading    = resolve(cf?.heading,             t('sendLetter'));
+  const formSubtitle   = resolve(cf?.subtitle,            t('oldSchool'));
+  const lblName        = resolve(cf?.labelName,           t('yourName'));
+  const lblEmail       = resolve(cf?.labelEmail,          t('yourEmail'));
+  const lblMessage     = resolve(cf?.labelMessage,        t('yourMessage'));
+  const phName         = resolve(cf?.placeholderName,     t('ph_name'));
+  const phEmail        = resolve(cf?.placeholderEmail,    t('ph_email'));
+  const phMessage      = resolve(cf?.placeholderMessage,  t('ph_message'));
+  const btnText        = resolve(cf?.btnText,             '');
+  const successHeading = resolve(cf?.successHeading,      t('letterSent'));
+  const successBody    = resolve(cf?.successBody,         '');
+  const responseTime   = resolve(cf?.responseTime,        t('iRespond'));
+  const formEnabled    = cf?.enabled !== false; // default true
 
   const handleSend = async () => {
     if (formData.name && formData.email && formData.message) { 
@@ -54,8 +76,8 @@ export const Contact = () => {
   return (
     <div className="page-container fade-in">
       <section style={{ padding: "3rem 0 5rem", maxWidth: 700, margin: "0 auto" }}>
-        <h1 style={{ fontFamily: "var(--font-sketch)", fontSize: "clamp(2rem, 5vw, 3rem)", fontWeight: 700, marginBottom: "0.5rem" }}>{t('sendLetter')}</h1>
-        <p style={{ fontFamily: "var(--font-body)", fontStyle: "italic", color: "var(--ink-faded)", marginBottom: "3rem" }}>{t('oldSchool')}</p>
+        <h1 style={{ fontFamily: "var(--font-sketch)", fontSize: "clamp(2rem, 5vw, 3rem)", fontWeight: 700, marginBottom: "0.5rem" }}>{formHeading}</h1>
+        <p style={{ fontFamily: "var(--font-body)", fontStyle: "italic", color: "var(--ink-faded)", marginBottom: "3rem" }}>{formSubtitle}</p>
 
         {/* Postcard */}
         <div style={{ background: "var(--cream)", border: "1.5px solid var(--ink-light)", borderRadius: "8px 30px 8px 30px", padding: "2.5rem 2rem", position: "relative", boxShadow: "6px 8px 0 rgba(42,32,24,0.1)" }}>
@@ -64,33 +86,41 @@ export const Contact = () => {
             <p style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem", color: "var(--ink-light)" }}>{siteConfig.email}</p>
           </div>
 
-          {!sent ? (
+          {!formEnabled ? (
+            <div style={{ textAlign: "center", padding: "2rem 0", opacity: 0.5 }}>
+              <p style={{ fontFamily: "var(--font-sketch)", fontSize: "1.5rem" }}>
+                {lang === 'ar' ? 'نموذج التواصل غير متاح حالياً' : lang === 'it' ? 'Modulo non disponibile' : 'Contact form is currently unavailable.'}
+              </p>
+            </div>
+          ) : !sent ? (
             <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
               <div>
-                <label style={{ fontFamily: "var(--font-sketch)", fontSize: "0.9rem", color: "var(--ink-light)", textTransform: "uppercase", letterSpacing: "1px", display: "block", marginBottom: "0.3rem" }}>{t('yourName')}</label>
-                <input className="input-line" placeholder={t('ph_name')} value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} disabled={isSubmitting} />
+                <label style={{ fontFamily: "var(--font-sketch)", fontSize: "0.9rem", color: "var(--ink-light)", textTransform: "uppercase", letterSpacing: "1px", display: "block", marginBottom: "0.3rem" }}>{lblName}</label>
+                <input className="input-line" placeholder={phName} value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} disabled={isSubmitting} />
               </div>
               <div>
-                <label style={{ fontFamily: "var(--font-sketch)", fontSize: "0.9rem", color: "var(--ink-light)", textTransform: "uppercase", letterSpacing: "1px", display: "block", marginBottom: "0.3rem" }}>{t('yourEmail')}</label>
-                <input className="input-line" type="email" placeholder={t('ph_email')} value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} disabled={isSubmitting} />
+                <label style={{ fontFamily: "var(--font-sketch)", fontSize: "0.9rem", color: "var(--ink-light)", textTransform: "uppercase", letterSpacing: "1px", display: "block", marginBottom: "0.3rem" }}>{lblEmail}</label>
+                <input className="input-line" type="email" placeholder={phEmail} value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} disabled={isSubmitting} />
               </div>
               <div>
-                <label style={{ fontFamily: "var(--font-sketch)", fontSize: "0.9rem", color: "var(--ink-light)", textTransform: "uppercase", letterSpacing: "1px", display: "block", marginBottom: "0.3rem" }}>{t('yourMessage')}</label>
-                <textarea className="input-line" placeholder={t('ph_message')} value={formData.message} onChange={e => setFormData({ ...formData, message: e.target.value })} disabled={isSubmitting} />
+                <label style={{ fontFamily: "var(--font-sketch)", fontSize: "0.9rem", color: "var(--ink-light)", textTransform: "uppercase", letterSpacing: "1px", display: "block", marginBottom: "0.3rem" }}>{lblMessage}</label>
+                <textarea className="input-line" placeholder={phMessage} value={formData.message} onChange={e => setFormData({ ...formData, message: e.target.value })} disabled={isSubmitting} />
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: "2rem", marginTop: "1rem" }}>
-                <button className="wax-btn" onClick={handleSend} disabled={isSubmitting} style={{ opacity: isSubmitting ? 0.7 : 1 }}>{isSubmitting ? '...' : <span dangerouslySetInnerHTML={{__html: t('send_it')}}/>}</button>
+                <button className="wax-btn" onClick={handleSend} disabled={isSubmitting} style={{ opacity: isSubmitting ? 0.7 : 1 }}>
+                  {isSubmitting ? '...' : <span dangerouslySetInnerHTML={{__html: btnText || t('send_it')}}/>}
+                </button>
                 <div>
                   <p style={{ fontFamily: "var(--font-sketch)", fontSize: "1rem", color: "var(--ink-faded)" }}>{t('pressWax')}</p>
-                  <p style={{ fontFamily: "var(--font-body)", fontSize: "0.85rem", fontStyle: "italic", color: "var(--ink-light)" }}>{t('iRespond')}</p>
+                  <p style={{ fontFamily: "var(--font-body)", fontSize: "0.85rem", fontStyle: "italic", color: "var(--ink-light)" }}>{responseTime}</p>
                 </div>
               </div>
             </div>
           ) : (
             <div style={{ textAlign: "center", padding: "2rem 0" }}>
               <div style={{ display: 'flex', justifyContent: 'center' }}><MascotFace size={80} color="var(--forest)" /></div>
-              <h3 style={{ fontFamily: "var(--font-sketch)", fontSize: "2rem", color: "var(--forest)", marginTop: "1rem" }}>{t('letterSent')}</h3>
-              <p style={{ fontFamily: "var(--font-body)", fontStyle: "italic", color: "var(--ink-faded)" }}>{t('illGetBack', { name: formData.name })}</p>
+              <h3 style={{ fontFamily: "var(--font-sketch)", fontSize: "2rem", color: "var(--forest)", marginTop: "1rem" }}>{successHeading}</h3>
+              <p style={{ fontFamily: "var(--font-body)", fontStyle: "italic", color: "var(--ink-faded)" }}>{successBody || t('illGetBack', { name: formData.name })}</p>
               <SketchyButton style={{ marginTop: '2rem' }} onClick={() => { setSent(false); setFormData({name: '', email: '', message: ''}); }}>{t('sendAnother')}</SketchyButton>
             </div>
           )}
