@@ -34,7 +34,7 @@ export const Home = () => {
           <p style={{ fontFamily: "var(--font-body)", fontSize: "1.05rem", lineHeight: 1.8, color: "var(--ink-faded)", marginBottom: "2rem" }}>
             {resolveField(siteConfig.summary)}
           </p>
-          <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+          <div className="hero-cta" style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
             <SketchyButton filled onClick={() => navigate("/projects")}>{t('seeMyWork')}</SketchyButton>
             <SketchyButton onClick={() => navigate("/contact")}>{t('sayHello')}</SketchyButton>
           </div>

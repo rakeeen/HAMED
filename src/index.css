@@ -140,9 +140,32 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Hide default cursor on interactive elements as well */
-*, a, button, input, textarea, select, .polaroid, .nav-link, .sketchy-btn, .wax-btn {
-  cursor: none !important;
+/* Custom Cursor - Desktop Only (Based on Hover & Width) */
+@media (min-width: 769px) and (hover: hover) {
+  body, *, a, button, input, textarea, select, .polaroid, .nav-link, .sketchy-btn, .wax-btn {
+    cursor: none !important;
+  }
+}
+
+/* Local Helpers */
+.color-ink {
+  color: var(--ink) !important;
+}
+
+/* Ensure no purple visited links in Logo */
+.navbar-logo, .navbar-logo span, .navbar-logo:visited {
+  color: var(--ink) !important;
+  text-decoration: none;
+}
+
+/* On mobile/touch, use native cursor and hide custom one */
+@media (max-width: 768px), (hover: none) {
+  body, *, a, button, input, textarea, select {
+    cursor: auto !important;
+  }
+  .custom-cursor-wrapper {
+    display: none !important;
+  }
 }
 
 ::selection {
@@ -378,10 +401,145 @@ textarea.input-line { resize: none; border: none; border-bottom: 1.5px solid var
 }
 
 /* ── RESPONSIVE ── */
+/* ── RESPONSIVE ── */
 @media (max-width: 768px) {
+  .hero-grid {
+    grid-template-columns: 1fr !important;
+    text-align: center;
+    gap: 3rem !important;
+  }
+  .hero-grid > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .hero-grid > div:last-child {
+    margin: 0 auto !important;
+    order: 1; /* Portrait BELOW text on mobile */
+  }
+  .hero-grid h1 {
+     text-align: center;
+  }
+  .hero-grid p {
+     text-align: center;
+  }
+  .hero-grid .hero-cta {
+     justify-content: center !important;
+     width: 100%;
+  }
+  .hero-grid .sketchy-btn {
+     width: 100%; 
+     max-width: 280px;
+  }
   .polaroid { padding: 8px 8px 28px; }
-  .hero-grid { grid-template-columns: 1fr !important; }
   .hide-mobile { display: none !important; }
+}
+
+/* ── NAVBAR RE-ENGINEERING ── */
+.navbar-container {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--paper);
+  border-bottom: 2px solid var(--tape);
+  padding: 0.8rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background 0.4s ease;
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+}
+
+.mobile-menu-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--ink);
+  cursor: pointer;
+  padding: 0.5rem;
+  z-index: 101;
+}
+
+.navbar-content {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.nav-links-wrap {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.theme-toggle-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem;
+}
+
+@media (max-width: 768px) {
+  .mobile-menu-toggle {
+    display: block;
+  }
+
+  .navbar-content {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100vh;
+    background: var(--paper);
+    flex-direction: column;
+    justify-content: center;
+    padding: 3rem;
+    gap: 3rem;
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 100;
+  }
+
+  .navbar-content.mobile-open {
+    transform: translateX(0);
+  }
+
+  .nav-links-wrap {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 1.5rem;
+  }
+
+  .nav-link {
+    font-size: 2rem;
+    font-family: var(--font-sketch);
+    text-align: center;
+    width: auto;
+  }
+
+  .nav-controls {
+    width: 100%;
+    justify-content: center;
+    padding-top: 2rem;
+    border-top: 1.5px dashed var(--tape);
+  }
 }
 @media (max-width: 600px) {
   .nav-links-wrap { gap: 0.1rem !important; }

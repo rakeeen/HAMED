@@ -43,30 +43,35 @@ export const SiteProvider = ({ children }: { children: ReactNode }) => {
   const [competencies, setCompetencies] = useState(DEFAULT_COMPETENCIES);
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [settings, setSettings] = useState<UISettings>(() => {
+    // 1. First priority: User's manual persistent choice
+    const local = localStorage.getItem('visitor_settings');
+    if (local) return JSON.parse(local);
+
+    // 2. Second priority: Browser/System preference
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     return { showCursor: true, theme: prefersDark ? 'dark' : 'light' };
   });
 
+  // Real-time synchronization with System Theme changes (Light/Dark mode)
   useEffect(() => {
-    const docRef = doc(db, 'content', 'main');
-    const loadLocalFallback = () => {
-      const saved = localStorage.getItem('site_data');
-      if (saved) {
-        try {
-          const data = JSON.parse(saved);
-          if (data.siteConfig) setSiteConfig(data.siteConfig);
-          if (data.projects) setProjects(data.projects);
-          if (data.timeline) setTimeline(data.timeline);
-          if (data.competencies) setCompetencies(data.competencies);
-          if (data.settings) setSettings(data.settings);
-        } catch (e) { console.error(e); }
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e: MediaQueryListEvent) => {
+      // Only auto-update if the user hasn't made a manual persistent choice on this device
+      if (!localStorage.getItem('visitor_settings')) {
+        setSettings(prev => ({ ...prev, theme: e.matches ? 'dark' : 'light' }));
       }
     };
-    
-    // First try to load local cache for instant paint
-    loadLocalFallback();
 
-    // Subscribe to Firestore changes
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', handleChange);
+      return () => mediaQuery.removeEventListener('change', handleChange);
+    }
+  }, []);
+
+  useEffect(() => {
+    const docRef = doc(db, 'content', 'main');
+    
+    // Subscribe to Firestore for global configuration defaults
     const unsub = onSnapshot(docRef, (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
@@ -74,10 +79,11 @@ export const SiteProvider = ({ children }: { children: ReactNode }) => {
         if (data.projects) setProjects(data.projects);
         if (data.timeline) setTimeline(data.timeline);
         if (data.competencies) setCompetencies(data.competencies);
-        if (data.settings) setSettings(data.settings);
         
-        // Update local cache
-        localStorage.setItem('site_data', JSON.stringify(data));
+        // Respect Firestore defaults ONLY if no local manual override exists
+        if (data.settings && !localStorage.getItem('visitor_settings')) {
+          setSettings(data.settings);
+        }
       } else {
         const initialData = {
           siteConfig: DEFAULT_CONFIG,
@@ -93,11 +99,18 @@ export const SiteProvider = ({ children }: { children: ReactNode }) => {
     return () => unsub();
   }, []);
 
+  // Persist settings locally whenever they change
+  useEffect(() => {
+    localStorage.setItem('visitor_settings', JSON.stringify(settings));
+  }, [settings]);
+
   const updateConfig = (config: Partial<typeof DEFAULT_CONFIG>) => setSiteConfig(prev => ({ ...prev, ...config }));
   const updateProjects = (newProjects: Project[]) => setProjects(newProjects);
   const updateTimeline = (newTimeline: TimelineItem[]) => setTimeline(newTimeline);
   const updateCompetencies = (newCompetencies: Competency[]) => setCompetencies(newCompetencies);
-  const updateSettings = (newSettings: Partial<UISettings>) => setSettings(prev => ({ ...prev, ...newSettings }));
+  const updateSettings = (newSettings: Partial<UISettings>) => {
+    setSettings(prev => ({ ...prev, ...newSettings }));
+  };
   
   const addInquiry = (inquiry: Omit<Inquiry, 'id' | 'date' | 'status'>) => {
     const newInquiry: Inquiry = {

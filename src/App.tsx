@@ -21,6 +21,18 @@ const ScrollToTop = () => {
   return null;
 };
 
+// Applies the theme (light/dark) from SiteContext to the document body
+const ThemeSync = () => {
+  const { settings } = useSiteContext();
+  useEffect(() => {
+    if (settings?.theme) {
+      document.body.classList.remove('light', 'dark');
+      document.body.classList.add(settings.theme);
+    }
+  }, [settings?.theme]);
+  return null;
+};
+
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const { settings } = useSiteContext();
 
@@ -78,6 +90,7 @@ export default function App() {
       <SiteProvider>
         <Router>
           <ScrollToTop />
+          <ThemeSync />
           <MainLayout>
             <Routes>
               <Route path="/" element={<Home />} />

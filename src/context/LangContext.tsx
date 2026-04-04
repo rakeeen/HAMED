@@ -103,6 +103,22 @@ export const LangProvider = ({ children }: { children: ReactNode }) => {
     return 'en';
   });
 
+  // Real-time synchronization with System Language changes
+  useEffect(() => {
+    const handleLangChange = () => {
+      // Only auto-update if the user hasn't pinned a manual choice
+      if (!localStorage.getItem('site_lang')) {
+        const browserLang = navigator.language.split('-')[0];
+        if (['en', 'ar', 'it'].includes(browserLang)) {
+          setLang(browserLang as Language);
+        }
+      }
+    };
+
+    window.addEventListener('languagechange', handleLangChange);
+    return () => window.removeEventListener('languagechange', handleLangChange);
+  }, []);
+
   useEffect(() => {
     // Synchronize UI if something else changes the lang (rare)
     const saved = localStorage.getItem('site_lang') as Language;
