@@ -48,7 +48,13 @@ export const Home = () => {
           </div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1.5rem", marginInlineStart: 'auto' }}>
-          {/* Image removed from Home page per user request, moved to About page */}
+          <div style={{ width: 220, height: 220, borderRadius: "50%", border: "3px solid var(--sepia)", overflow: "hidden", background: "var(--paper-dark)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "8px 10px 0 rgba(139,105,20,0.2)", position: "relative" }}>
+            {siteConfig.siteImages?.aboutPortrait ? (
+                <img src={siteConfig.siteImages.aboutPortrait} alt={resolveField(siteConfig.name)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            ) : (
+                <MascotFace size={140} />
+            )}
+          </div>
           <div style={{ textAlign: "center" }}>
             <p style={{ fontFamily: "var(--font-sketch)", fontSize: "1.4rem", fontWeight: 700, color: "var(--ink)" }}>{resolveField(siteConfig.name)}</p>
             <p style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem", color: "var(--ink-light)" }}>{t('bio_tagline')}</p>
