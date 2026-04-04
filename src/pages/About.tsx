@@ -20,12 +20,22 @@ export const About = () => {
     <div className="page-container fade-in">
       {/* About Hero */}
       <section style={{ padding: "4rem 0 2rem" }}>
-        <h1 style={{ fontFamily: "var(--font-sketch)", fontSize: "clamp(2.5rem, 6vw, 4rem)", fontWeight: 700, color: "var(--ink)", marginBottom: "1rem" }}>
-          {t('behindPixels')}
-        </h1>
-        <p style={{ fontFamily: "var(--font-body)", fontSize: "1.1rem", lineHeight: 1.8, color: "var(--ink-faded)", maxWidth: "800px" }}>
-          {resolveField(siteConfig.summary)}
-        </p>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "3rem", alignItems: "center" }}>
+           <div>
+             <h1 style={{ fontFamily: "var(--font-sketch)", fontSize: "clamp(2.5rem, 6vw, 4rem)", fontWeight: 700, color: "var(--ink)", marginBottom: "1rem" }}>
+               {t('behindPixels')}
+             </h1>
+             <p style={{ fontFamily: "var(--font-body)", fontSize: "1.1rem", lineHeight: 1.8, color: "var(--ink-faded)", maxWidth: "800px" }}>
+               {resolveField(siteConfig.summary)}
+             </p>
+           </div>
+           
+           {siteConfig.siteImages?.aboutPortrait && (
+             <div style={{ flex: "1 1 300px", maxWidth: "400px", borderRadius: "var(--radius-organic)", overflow: "hidden", border: "3px solid var(--sepia)", boxShadow: "10px 12px 0 rgba(139,105,20,0.15)" }}>
+               <img src={siteConfig.siteImages.aboutPortrait} alt={resolveField(siteConfig.name)} style={{ width: '100%', height: 'auto', display: 'block' }} />
+             </div>
+           )}
+        </div>
       </section>
 
       <hr className="sketch-divider" />

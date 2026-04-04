@@ -26,27 +26,29 @@ export const Home = () => {
             {resolveField(siteConfig.role)}
           </p>
           <h1 style={{ fontFamily: "var(--font-sketch)", fontSize: "clamp(2.2rem, 5vw, 3.6rem)", fontWeight: 700, lineHeight: 1.2, color: "var(--ink)", marginBottom: "1.5rem" }}>
-            {t('bridgingLogic', { default: 'Bridging complex logic with' })}<br />
-            <span style={{ color: "var(--sepia)", textDecoration: "underline", textDecorationStyle: "wavy", textDecorationColor: "rgba(139,105,20,0.4)" }}>
-                {t('humanCentered', { default: 'human-centered design.' })}
-            </span>
+            {((siteConfig as any).heroGiantText && resolveField((siteConfig as any).heroGiantText)) ? (
+                <div style={{ whiteSpace: 'pre-line' }}>{resolveField((siteConfig as any).heroGiantText)}</div>
+            ) : (
+                <>{t('bridgingLogic', { default: 'Bridging complex logic with' })}<br />
+                <span style={{ color: "var(--sepia)", textDecoration: "underline", textDecorationStyle: "wavy", textDecorationColor: "rgba(139,105,20,0.4)" }}>
+                    {t('humanCentered', { default: 'human-centered design.' })}
+                </span></>
+            )}
           </h1>
           <p style={{ fontFamily: "var(--font-body)", fontSize: "1.05rem", lineHeight: 1.8, color: "var(--ink-faded)", marginBottom: "2rem" }}>
             {resolveField(siteConfig.summary)}
           </p>
           <div className="hero-cta" style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-            <SketchyButton filled onClick={() => navigate("/projects")}>{t('seeMyWork')}</SketchyButton>
-            <SketchyButton onClick={() => navigate("/contact")}>{t('sayHello')}</SketchyButton>
+            <SketchyButton filled onClick={() => navigate("/projects")}>
+                {((siteConfig as any).button1Text && resolveField((siteConfig as any).button1Text)) || t('seeMyWork')}
+            </SketchyButton>
+            <SketchyButton onClick={() => navigate("/contact")}>
+                {((siteConfig as any).button2Text && resolveField((siteConfig as any).button2Text)) || t('sayHello')}
+            </SketchyButton>
           </div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1.5rem", marginInlineStart: 'auto' }}>
-          <div style={{ width: 220, height: 220, borderRadius: "50%", border: "3px solid var(--sepia)", overflow: "hidden", background: "var(--paper-dark)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "8px 10px 0 rgba(139,105,20,0.2)", position: "relative" }}>
-            {siteConfig.siteImages?.aboutPortrait ? (
-                <img src={siteConfig.siteImages.aboutPortrait} alt={siteConfig.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            ) : (
-                <MascotFace size={140} />
-            )}
-          </div>
+          {/* Image removed from Home page per user request, moved to About page */}
           <div style={{ textAlign: "center" }}>
             <p style={{ fontFamily: "var(--font-sketch)", fontSize: "1.4rem", fontWeight: 700, color: "var(--ink)" }}>{resolveField(siteConfig.name)}</p>
             <p style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem", color: "var(--ink-light)" }}>{t('bio_tagline')}</p>
