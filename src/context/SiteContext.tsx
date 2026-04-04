@@ -42,7 +42,10 @@ export const SiteProvider = ({ children }: { children: ReactNode }) => {
   const [timeline, setTimeline] = useState(DEFAULT_TIMELINE);
   const [competencies, setCompetencies] = useState(DEFAULT_COMPETENCIES);
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
-  const [settings, setSettings] = useState<UISettings>({ showCursor: true, theme: 'dark' });
+  const [settings, setSettings] = useState<UISettings>(() => {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return { showCursor: true, theme: prefersDark ? 'dark' : 'light' };
+  });
 
   useEffect(() => {
     const docRef = doc(db, 'content', 'main');

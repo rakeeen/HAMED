@@ -40,14 +40,20 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
         }
       }
 
-      // 2. Unique Visitors (Increments ONLY ONCE per device/browser ever)
-      if (!localStorage.getItem('hamed_unique_id')) {
-        localStorage.setItem('hamed_unique_id', `unique_${Date.now()}`);
+      // 2. Unique Visitors (Hardened v2 check: Only once per human ever)
+      const uniqueKey = 'hamed_human_v2_confirmed'; // New versioned key for clean counting
+      if (!localStorage.getItem(uniqueKey)) {
+        // Set immediately to shield against rapid multi-tab clicks
+        localStorage.setItem(uniqueKey, `v2_${Date.now()}`);
+        
         try {
-          const ref = doc(db, 'analytics', 'main');
-          await updateDoc(ref, { uniqueVisitors: increment(1) });
+          const analyticsRef = doc(db, 'analytics', 'main');
+          await updateDoc(analyticsRef, { uniqueVisitors: increment(1) });
         } catch (e) {
-          // Handled by init above
+          // Initialize if missing
+          try {
+             await setDoc(doc(db, 'analytics', 'main'), { totalVisits: 1, uniqueVisitors: 1, inquiries: 0 });
+          } catch(err) { console.warn("Reset sync failed", err); }
         }
       }
     };

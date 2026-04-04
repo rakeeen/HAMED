@@ -90,12 +90,23 @@ interface LangContextType {
 const LangContext = createContext<LangContextType | undefined>(undefined);
 
 export const LangProvider = ({ children }: { children: ReactNode }) => {
-  const [lang, setLang] = useState<Language>('en');
+  const [lang, setLang] = useState<Language>(() => {
+    // 1. Check if user already made a manual choice
+    const saved = localStorage.getItem('site_lang') as Language;
+    if (saved && ['en', 'ar', 'it'].includes(saved)) return saved;
+
+    // 2. Fallback to system/browser language
+    const browserLang = navigator.language.split('-')[0];
+    if (['en', 'ar', 'it'].includes(browserLang)) return browserLang as Language;
+
+    // 3. Ultimate default
+    return 'en';
+  });
 
   useEffect(() => {
-    // Check saved language
+    // Synchronize UI if something else changes the lang (rare)
     const saved = localStorage.getItem('site_lang') as Language;
-    if (saved && ['en', 'ar', 'it'].includes(saved)) {
+    if (saved && saved !== lang && ['en', 'ar', 'it'].includes(saved)) {
       setLang(saved);
     }
   }, []);
