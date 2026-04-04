@@ -58,15 +58,15 @@ export const About = () => {
 
       {/* Philosophy / CTA */}
       <div style={{ background: "var(--cream)", border: "1.5px solid var(--ink-light)", borderRadius: "var(--radius-organic)", padding: "2.5rem", marginBottom: "4rem", display: "flex", alignItems: "center", gap: "2.5rem", flexDirection: "row", flexWrap: "wrap", justifyContent: 'center' }}>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-           <MascotFace size={100} color="var(--ink)" />
-        </div>
-        <div style={{ flex: 1, minWidth: '280px', textAlign: document.dir === 'rtl' ? 'right' : 'left' }}>
+        <div style={{ flex: 1, minWidth: '280px', textAlign: 'inherit' }}>
             <h3 style={{ fontFamily: "var(--font-sketch)", fontSize: "2.2rem", color: "var(--ink)", marginBottom: "0.5rem" }}>{t('getInTouch')}</h3>
             <p style={{ fontFamily: "var(--font-body)", fontSize: "1.05rem", color: "var(--ink-faded)", marginBottom: "1.5rem", lineHeight: 1.6 }}>
               {t('alwaysLooking')}
             </p>
             <SketchyButton filled onClick={() => navigate("/contact")}>{t('reachOut')}</SketchyButton>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+           <MascotFace size={100} color="var(--ink)" />
         </div>
       </div>
     </div>
