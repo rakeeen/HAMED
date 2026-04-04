@@ -29,12 +29,6 @@ export const About = () => {
                {resolveField(siteConfig.summary)}
              </p>
            </div>
-           
-           {siteConfig.siteImages?.aboutPortrait && (
-             <div style={{ flex: "1 1 300px", maxWidth: "400px", borderRadius: "var(--radius-organic)", overflow: "hidden", border: "3px solid var(--sepia)", boxShadow: "10px 12px 0 rgba(139,105,20,0.15)" }}>
-               <img src={siteConfig.siteImages.aboutPortrait} alt={resolveField(siteConfig.name)} style={{ width: '100%', height: 'auto', display: 'block' }} />
-             </div>
-           )}
         </div>
       </section>
 

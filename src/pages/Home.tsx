@@ -17,6 +17,25 @@ export const Home = () => {
 
   const featuredProjects = projects.filter(p => p.featured).slice(0, 3);
 
+  const renderHeroText = (text: string) => {
+    if (!text) return null;
+    const parts = text.split(/(\*.*?\*)/g);
+    return (
+      <div style={{ whiteSpace: 'pre-line' }}>
+        {parts.map((part, i) => {
+          if (part.startsWith('*') && part.endsWith('*') && part.length >= 2) {
+            return (
+              <span key={i} style={{ color: "var(--sepia)", textDecoration: "underline", textDecorationStyle: "wavy", textDecorationColor: "rgba(139,105,20,0.4)" }}>
+                {part.slice(1, -1)}
+              </span>
+            );
+          }
+          return <React.Fragment key={i}>{part}</React.Fragment>;
+        })}
+      </div>
+    );
+  };
+
   return (
     <div className="page-container fade-in">
       {/* Hero */}
@@ -27,7 +46,7 @@ export const Home = () => {
           </p>
           <h1 style={{ fontFamily: "var(--font-sketch)", fontSize: "clamp(2.2rem, 5vw, 3.6rem)", fontWeight: 700, lineHeight: 1.2, color: "var(--ink)", marginBottom: "1.5rem" }}>
             {((siteConfig as any).heroGiantText && resolveField((siteConfig as any).heroGiantText)) ? (
-                <div style={{ whiteSpace: 'pre-line' }}>{resolveField((siteConfig as any).heroGiantText)}</div>
+                renderHeroText(resolveField((siteConfig as any).heroGiantText))
             ) : (
                 <>{t('bridgingLogic', { default: 'Bridging complex logic with' })}<br />
                 <span style={{ color: "var(--sepia)", textDecoration: "underline", textDecorationStyle: "wavy", textDecorationColor: "rgba(139,105,20,0.4)" }}>
