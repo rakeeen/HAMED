@@ -26,18 +26,28 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const trackVisit = async () => {
-      if (!sessionStorage.getItem('visited_hamed')) {
-        sessionStorage.setItem('visited_hamed', 'true');
+      // 1. Total Sessions (Increments every time the browser is opened)
+      if (!sessionStorage.getItem('hamed_session_tracked')) {
+        sessionStorage.setItem('hamed_session_tracked', 'true');
         try {
           const ref = doc(db, 'analytics', 'main');
-          const snap = await getDoc(ref);
-          if (snap.exists()) {
-             await updateDoc(ref, { visitors: increment(1) });
-          } else {
-             await setDoc(ref, { visitors: 1, inquiries: 0 });
-          }
+          await updateDoc(ref, { totalVisits: increment(1) });
         } catch (e) {
-          console.error("Analytics failure", e);
+          // If doc doesn't exist, initialize it
+          try {
+            await setDoc(doc(db, 'analytics', 'main'), { totalVisits: 1, uniqueVisitors: 1, inquiries: 0 });
+          } catch (err) { console.error("Init stats error", err); }
+        }
+      }
+
+      // 2. Unique Visitors (Increments ONLY ONCE per device/browser ever)
+      if (!localStorage.getItem('hamed_unique_id')) {
+        localStorage.setItem('hamed_unique_id', `unique_${Date.now()}`);
+        try {
+          const ref = doc(db, 'analytics', 'main');
+          await updateDoc(ref, { uniqueVisitors: increment(1) });
+        } catch (e) {
+          // Handled by init above
         }
       }
     };
