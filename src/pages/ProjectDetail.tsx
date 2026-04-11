@@ -328,32 +328,85 @@ export const ProjectDetail = () => {
         </section>
       )}
 
-      {/* ══ NEXT / PREV ══ */}
-      <div style={{ borderTop: '1.5px solid var(--tape)', display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
+      {/* ══ NEXT / PREV NAVIGATION ══ */}
+      <section style={{ background: 'var(--paper-dark)', borderTop: '2px solid var(--tape)', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
         {resolvedIndex > 0 ? (
           <div
             onClick={() => navigate(`/project/${projects[resolvedIndex - 1].id}`)}
-            style={{ padding: 'clamp(2.5rem,5vw,5rem)', cursor: 'pointer', borderRight: '1.5px solid var(--tape)', transition: 'background 0.3s' }}
-            onMouseEnter={e => (e.currentTarget.style.background = 'var(--paper-dark)')}
-            onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+            style={{ 
+              padding: 'clamp(4rem, 8vw, 10rem) clamp(2rem, 5vw, 6rem)', 
+              cursor: 'pointer', 
+              borderRight: '1px solid var(--tape)', 
+              transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+              position: 'relative',
+              overflow: 'hidden'
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.background = 'var(--paper)';
+              e.currentTarget.style.paddingLeft = 'clamp(3rem, 6vw, 7rem)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background = 'transparent';
+              e.currentTarget.style.paddingLeft = 'clamp(2rem, 5vw, 6rem)';
+            }}
           >
-            <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--ink-light)', marginBottom: '0.8rem' }}>← Previous</p>
-            <p style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(1.1rem,2.5vw,1.8rem)', fontWeight: 700, color: 'var(--ink)' }}>{resolveField(projects[resolvedIndex - 1].title)}</p>
+            <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.3em', textTransform: 'uppercase', color: 'var(--sepia)', marginBottom: '1.5rem' }}>
+              ← Previous Case
+            </p>
+            <h3 style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(2rem, 4.5vw, 3.5rem)', fontWeight: 900, color: 'var(--ink)', lineHeight: 1.1, maxWidth: '400px' }}>
+              {resolveField(projects[resolvedIndex - 1].title)}
+            </h3>
           </div>
-        ) : <div />}
+        ) : <div style={{ background: 'var(--paper-dark)', borderRight: '1px solid var(--tape)' }} />}
 
         {resolvedIndex < projects.length - 1 ? (
           <div
             onClick={() => navigate(`/project/${projects[resolvedIndex + 1].id}`)}
-            style={{ padding: 'clamp(2.5rem,5vw,5rem)', cursor: 'pointer', textAlign: 'right', transition: 'background 0.3s' }}
-            onMouseEnter={e => (e.currentTarget.style.background = 'var(--paper-dark)')}
-            onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+            style={{ 
+              padding: 'clamp(4rem, 8vw, 10rem) clamp(2rem, 5vw, 6rem)', 
+              cursor: 'pointer', 
+              textAlign: 'right',
+              transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+              position: 'relative',
+              overflow: 'hidden'
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.background = 'var(--paper)';
+              e.currentTarget.style.paddingRight = 'clamp(3rem, 6vw, 7rem)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background = 'transparent';
+              e.currentTarget.style.paddingRight = 'clamp(2rem, 5vw, 6rem)';
+            }}
           >
-            <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--ink-light)', marginBottom: '0.8rem' }}>Next →</p>
-            <p style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(1.1rem,2.5vw,1.8rem)', fontWeight: 700, color: 'var(--ink)' }}>{resolveField(projects[resolvedIndex + 1].title)}</p>
+            <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.3em', textTransform: 'uppercase', color: 'var(--sepia)', marginBottom: '1.5rem' }}>
+              Next Case →
+            </p>
+            <h3 style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(2rem, 4.5vw, 3.5rem)', fontWeight: 900, color: 'var(--ink)', lineHeight: 1.1, marginLeft: 'auto', maxWidth: '400px' }}>
+              {resolveField(projects[resolvedIndex + 1].title)}
+            </h3>
           </div>
-        ) : <div />}
-      </div>
+        ) : (
+          <div 
+            onClick={() => navigate('/projects')}
+            style={{ 
+              padding: 'clamp(4rem, 8vw, 10rem) clamp(2rem, 5vw, 6rem)', 
+              cursor: 'pointer', 
+              textAlign: 'right',
+              transition: 'all 0.4s ease'
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = 'var(--paper)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+          >
+            <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.3em', textTransform: 'uppercase', color: 'var(--sepia)', marginBottom: '1.5rem' }}>
+              Back to Overview
+            </p>
+            <h3 style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(2rem, 4.5vw, 3.5rem)', fontWeight: 900, color: 'var(--ink)', lineHeight: 1.1 }}>
+              All Projects
+            </h3>
+          </div>
+        )}
+      </section>
 
       {/* Mobile grid fix */}
       <style>{`

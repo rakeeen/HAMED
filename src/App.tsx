@@ -75,10 +75,12 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <div className="paper-texture" style={{ display: 'flex', flexDirection: 'column' }}>
+    <div className="paper-texture" style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
       {settings?.showCursor !== false && <CustomCursor />}
-      <Navbar />
-      <main style={{ flexGrow: 1, paddingTop: isProjectDetail ? 0 : 0 }}>
+      <div style={isProjectDetail ? { position: 'absolute', top: 0, left: 0, width: '100%', zIndex: 1000, background: 'transparent' } : {}}>
+        <Navbar />
+      </div>
+      <main style={{ flexGrow: 1 }}>
         {children}
       </main>
       <Footer />

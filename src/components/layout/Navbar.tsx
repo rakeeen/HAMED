@@ -31,8 +31,10 @@ export const Navbar = () => {
 
   const siteName = resolveField(siteConfig.name);
 
+  const isProjectDetail = location.pathname.startsWith('/project/');
+
   return (
-    <nav className="navbar-container">
+    <nav className="navbar-container" style={isProjectDetail ? { background: 'transparent', borderBottom: 'none' } : {}}>
       {/* Logo */}
       <Link to="/" className="navbar-logo" onClick={() => setIsMenuOpen(false)}>
         <MascotFace size={32} />
