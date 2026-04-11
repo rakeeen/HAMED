@@ -195,22 +195,32 @@ export const ProjectDetail = () => {
         {/* Gradient just at bottom for text legibility */}
         <div style={{
           position: 'absolute', inset: 0, zIndex: 1,
-          background: 'linear-gradient(to top, var(--paper) 0%, rgba(0,0,0,0) 55%)',
+          background: 'linear-gradient(to top, var(--paper) 0%, transparent 40%)',
         }} />
 
-        <div style={{ position: 'relative', zIndex: 2, padding: 'clamp(2.5rem,7vw,6rem)', paddingBottom: 'clamp(4rem,9vw,7rem)', maxWidth: '1000px' }}>
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.28em', textTransform: 'uppercase', color: 'var(--sepia)', marginBottom: '1.2rem' }}>
+        <div style={{ 
+          position: 'relative', 
+          zIndex: 2, 
+          padding: 'clamp(1.5rem,4vw,3rem)', 
+          paddingBottom: '2.5rem', 
+          width: '100%', 
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center', 
+          textAlign: 'center' 
+        }}>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.28em', textTransform: 'uppercase', color: 'var(--sepia)', marginBottom: '1rem' }}>
             {resolveField(project.category)}
           </p>
-          <h1 style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(3.5rem,9vw,8rem)', fontWeight: 800, color: 'var(--ink)', lineHeight: 1.0, marginBottom: '1.4rem', letterSpacing: '-0.03em' }}>
+          <h1 style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(2.5rem,6vw,5.5rem)', fontWeight: 800, color: 'var(--ink)', lineHeight: 1.1, marginBottom: '1.2rem', letterSpacing: '-0.02em', maxWidth: '800px' }}>
             {resolveField(project.title)}
           </h1>
           {subtitle && (
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(1rem,2vw,1.3rem)', color: 'var(--ink-faded)', maxWidth: '560px', lineHeight: 1.7, marginBottom: '2.5rem' }}>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(1rem,1.5vw,1.15rem)', color: 'var(--ink-faded)', maxWidth: '600px', lineHeight: 1.7, marginBottom: '2rem' }}>
               {subtitle}
             </p>
           )}
-          <div style={{ display: 'flex', gap: '3rem', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: 'clamp(1.5rem,5vw,4rem)', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center' }}>
             {([
               project.client   && ['Client',   resolveField(project.client)],
               project.role     && ['Role',     resolveField(project.role)],
@@ -223,7 +233,7 @@ export const ProjectDetail = () => {
             ))}
           </div>
           {project.link && (
-            <a href={project.link} target="_blank" rel="noreferrer" className="sketchy-btn" style={{ display: 'inline-block', marginTop: '2rem', textDecoration: 'none', fontSize: '0.9rem' }}>
+            <a href={project.link} target="_blank" rel="noreferrer" className="sketchy-btn" style={{ marginTop: '2.5rem', textDecoration: 'none', fontSize: '0.9rem' }}>
               View Live →
             </a>
           )}
