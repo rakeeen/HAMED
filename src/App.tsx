@@ -35,6 +35,8 @@ const ThemeSync = () => {
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const { settings } = useSiteContext();
+  const location = useLocation();
+  const isProjectDetail = location.pathname.startsWith('/project/');
 
   useEffect(() => {
     const trackVisit = async () => {
@@ -75,11 +77,11 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="paper-texture" style={{ display: 'flex', flexDirection: 'column' }}>
       {settings?.showCursor !== false && <CustomCursor />}
-      <Navbar />
-      <main style={{ flexGrow: 1, paddingTop: '2rem' }}>
+      {!isProjectDetail && <Navbar />}
+      <main style={{ flexGrow: 1, paddingTop: isProjectDetail ? 0 : 0 }}>
         {children}
       </main>
-      <Footer />
+      {!isProjectDetail && <Footer />}
     </div>
   );
 };
