@@ -5,6 +5,7 @@ import { MascotFace } from '../components/ui/MascotFace';
 import { useNavigate } from 'react-router-dom';
 import { PolaroidCard } from '../components/ui/PolaroidCard';
 import { SketchyButton } from '../components/ui/SketchyButton';
+import { InteractiveGlow } from '../components/ui/InteractiveGlow';
 
 export const Home = () => {
   const { siteConfig, projects } = useSiteContext();
@@ -15,7 +16,9 @@ export const Home = () => {
     document.title = `${resolveField(siteConfig.name)} | ${resolveField(siteConfig.role).split('|')[0]}`;
   }, [siteConfig, resolveField]);
 
-  const featuredProjects = projects.filter(p => p.featured).slice(0, 3);
+  const featuredProjects = projects.some(p => p.featured) 
+    ? projects.filter(p => p.featured).slice(0, 3)
+    : projects.slice(0, 3);
 
   const renderHeroText = (text: string) => {
     if (!text) return null;
@@ -101,9 +104,12 @@ export const Home = () => {
       <hr className="sketch-divider" />
 
       {/* Quick stats / CTA */}
-      <div style={{ background: "var(--cream)", border: "1.5px solid var(--ink-light)", borderRadius: "var(--radius-organic)", padding: "2rem 2.5rem", marginBottom: "4rem", textAlign: "center" }}>
-        <p style={{ fontFamily: "var(--font-sketch)", fontSize: "1.4rem", color: "var(--ink-faded)", marginBottom: "1.5rem" }}>{t('curious')}</p>
-        <SketchyButton filled onClick={() => navigate("/about")}>{t('moreAbout')}</SketchyButton>
+      <div style={{ position: 'relative', overflow: 'hidden', background: "var(--cream)", border: "1.5px solid var(--ink-light)", borderRadius: "var(--radius-organic)", padding: "2rem 2.5rem", marginBottom: "4rem", textAlign: "center" }}>
+        <InteractiveGlow color="var(--sepia)" opacity={0.3} size={400} />
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <p style={{ fontFamily: "var(--font-sketch)", fontSize: "1.4rem", color: "var(--ink-faded)", marginBottom: "1.5rem" }}>{t('curious')}</p>
+          <SketchyButton filled onClick={() => navigate("/about")}>{t('moreAbout')}</SketchyButton>
+        </div>
       </div>
     </div>
   );

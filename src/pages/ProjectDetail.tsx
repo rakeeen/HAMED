@@ -155,33 +155,29 @@ export const ProjectDetail = () => {
       )}
 
       {/* ══ IMPACT ══ */}
-      {(keyResult || conclusion) && (
+      {conclusion && (
         <section style={{ maxWidth: '1400px', margin: 'clamp(4rem, 10vw, 12rem) auto clamp(2rem, 5vw, 4rem)', padding: '0 clamp(1.5rem,5vw,6rem)' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '4fr 8fr', gap: '0', alignItems: 'start' }}>
             <div style={{ position: 'sticky', top: '22vh', alignSelf: 'start' }}>
               <h2 style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(2.5rem,5vw,4.5rem)', fontWeight: 900, lineHeight: 1.0, letterSpacing: '-0.02em', color: 'var(--ink)' }}>
-                Impact
+                The Result
               </h2>
             </div>
             
             <div style={{ padding: '0 0 0 clamp(3rem,6vw,7rem)' }}>
-              {keyResult && (
-                <p style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(4rem,11vw,9rem)', fontWeight: 900, lineHeight: 0.95, letterSpacing: '-0.04em', color: 'var(--ink)', marginBottom: '2.5rem' }}>
-                  {keyResult}
-                </p>
-              )}
-              {conclusion && (
+              <div>
+                <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--sepia)', marginBottom: '1rem' }}>Impact</p>
                 <p style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(1.05rem,2vw,1.35rem)', lineHeight: 1.8, color: 'var(--ink-faded)', maxWidth: '580px' }}>
                   {conclusion}
                 </p>
-              )}
+              </div>
             </div>
           </div>
         </section>
       )}
 
       {/* ══ PROJECT METADATA — Tightened spacing ══ */}
-      <section style={{ display: 'flex', justifyContent: 'center', gap: 'clamp(2rem, 6vw, 8rem)', flexWrap: 'wrap', textAlign: 'center', margin: '3rem auto 6rem', padding: '0 2rem' }}>
+      <section style={{ display: 'flex', justifyContent: 'center', gap: 'clamp(2rem, 6vw, 8rem)', flexWrap: 'wrap', textAlign: 'center', margin: 'clamp(6rem, 12vw, 11rem) auto clamp(7rem, 14vw, 13rem)', padding: '0 2rem' }}>
           {([
             project.client   && ['Client',   resolveField(project.client)],
             project.role     && ['Role',     resolveField(project.role)],
