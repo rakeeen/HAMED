@@ -75,7 +75,15 @@ export const SiteProvider = ({ children }: { children: ReactNode }) => {
     const unsub = onSnapshot(docRef, (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
-        if (data.siteConfig) setSiteConfig(data.siteConfig);
+        if (data.siteConfig) {
+          setSiteConfig({
+            ...DEFAULT_CONFIG,
+            ...data.siteConfig,
+            contactForm: { ...(DEFAULT_CONFIG.contactForm || {}), ...(data.siteConfig.contactForm || {}) },
+            socials: { ...(DEFAULT_CONFIG.socials || {}), ...(data.siteConfig.socials || {}) },
+            siteImages: { ...(DEFAULT_CONFIG.siteImages || {}), ...(data.siteConfig.siteImages || {}) }
+          });
+        }
         if (data.projects) setProjects(data.projects);
         if (data.timeline) setTimeline(data.timeline);
         if (data.competencies) setCompetencies(data.competencies);
