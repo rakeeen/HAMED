@@ -198,33 +198,30 @@ export const ProjectDetail = () => {
           background: 'linear-gradient(to top, var(--paper) 0%, rgba(0,0,0,0) 55%)',
         }} />
 
-        <div style={{ position: 'relative', zIndex: 2, padding: 'clamp(1rem,4vw,3.5rem)', paddingBottom: 'clamp(1.5rem,2.5vw,2rem)', maxWidth: '1200px', width: '100%', margin: '0 auto', textAlign: 'center' }}>
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.28em', textTransform: 'uppercase', color: 'var(--sepia)', marginBottom: '1rem', textAlign: 'left' }}>
+        <div style={{ position: 'relative', zIndex: 2, padding: 'clamp(1.5rem,4vw,3rem)', paddingBottom: '1.5rem', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.28em', textTransform: 'uppercase', color: 'var(--sepia)', marginBottom: '1rem' }}>
             {resolveField(project.category)}
           </p>
-          <h1 style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(2.5rem,7vw,6.5rem)', fontWeight: 800, color: 'var(--ink)', lineHeight: 1.0, marginBottom: '2.5rem', letterSpacing: '-0.03em', textAlign: 'left' }}>
+          <h1 style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(2.5rem,7vw,5.5rem)', fontWeight: 800, color: 'var(--ink)', lineHeight: 1.05, marginBottom: '1.2rem', letterSpacing: '-0.02em' }}>
             {resolveField(project.title)}
           </h1>
-          
-          <div style={{ display: 'flex', gap: 'clamp(2rem, 5vw, 6rem)', flexWrap: 'wrap', justifyContent: 'center', marginBottom: subtitle ? '2.5rem' : '1rem' }}>
+          {subtitle && (
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(0.95rem,2vw,1.15rem)', color: 'var(--ink-faded)', maxWidth: '600px', lineHeight: 1.6, marginBottom: '1.5rem' }}>
+              {subtitle}
+            </p>
+          )}
+          <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', justifyContent: 'center', marginBottom: project.link ? '1.5rem' : '0' }}>
             {([
               project.client   && ['Client',   resolveField(project.client)],
               project.role     && ['Role',     resolveField(project.role)],
               project.duration && ['Timeline', resolveField(project.duration)],
             ].filter(Boolean) as string[][]).map(([k, v]) => (
-              <div key={k} style={{ textAlign: 'center' }}>
-                <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-light)', marginBottom: '0.5rem' }}>{k}</p>
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: '1rem', fontWeight: 600, color: 'var(--ink)' }}>{v}</p>
+              <div key={k}>
+                <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-light)', marginBottom: '0.2rem' }}>{k}</p>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.85rem', fontWeight: 600, color: 'var(--ink-faded)' }}>{v}</p>
               </div>
             ))}
           </div>
-          
-          {subtitle && (
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(1rem,2vw,1.3rem)', color: 'var(--ink-faded)', maxWidth: '700px', margin: '0 auto', lineHeight: 1.7, marginBottom: '2.5rem' }}>
-              {subtitle}
-            </p>
-          )}
-          
           {project.link && (
             <a href={project.link} target="_blank" rel="noreferrer" className="sketchy-btn" style={{ display: 'inline-block', textDecoration: 'none', fontSize: '0.9rem' }}>
               View Live →
@@ -236,7 +233,7 @@ export const ProjectDetail = () => {
       {/* ══ CONTEXT — 12 col grid, Sticky Left ══ */}
       {(challenge || solution) && (
         <>
-          <section className="project-grid" style={{ display: 'grid', gridTemplateColumns: '4fr 8fr', gap: '0', maxWidth: '1400px', margin: 'clamp(8rem, 14vw, 16rem) auto clamp(8rem, 14vw, 16rem)', padding: '0 clamp(1.5rem,5vw,6rem)' }}>
+          <section style={{ display: 'grid', gridTemplateColumns: '4fr 8fr', gap: '0', maxWidth: '1400px', margin: 'clamp(8rem, 14vw, 16rem) auto clamp(8rem, 14vw, 16rem)', padding: '0 clamp(1.5rem,5vw,6rem)' }}>
             {/* Sticky Left */}
             <div style={{ position: 'sticky', top: '28vh', alignSelf: 'start' }}>
               <Reveal>
@@ -271,25 +268,23 @@ export const ProjectDetail = () => {
       {/* ══ GALLERY — Staggered Large Cards ══ */}
       {gallery.length > 0 && (
         <>
-          <section className="project-grid" style={{ display: 'grid', gridTemplateColumns: '4fr 8fr', gap: '0', maxWidth: '1400px', margin: 'clamp(8rem, 14vw, 16rem) auto', padding: '0 clamp(1.5rem,5vw,6rem)' }}>
-            <div style={{ position: 'sticky', top: '28vh', alignSelf: 'start' }}>
-              <Reveal>
-                <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase', color: 'var(--sepia)', marginBottom: '1.3rem' }}>
-                  The Showcase
-                </p>
-                <h2 style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(2.5rem,5vw,4.5rem)', fontWeight: 900, lineHeight: 1.0, letterSpacing: '-0.02em', color: 'var(--ink)' }}>
-                  Visuals
-                </h2>
-              </Reveal>
-            </div>
+          <section style={{ padding: '0 clamp(1rem,3vw,3.5rem)', margin: 'clamp(8rem, 14vw, 16rem) 0' }}>
+            <Reveal>
+              <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase', color: 'var(--sepia)', marginBottom: 'clamp(4rem,7vw,8rem)', textAlign: 'center' }}>
+                Visual Showcase
+              </p>
+            </Reveal>
 
-            <div style={{ padding: '0 0 0 clamp(3rem,6vw,7rem)', display: 'flex', flexDirection: 'column', gap: 'clamp(4rem,7vw,8rem)' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(3rem,6vw,7rem)' }}>
               {gallery.map((item, i) => {
-                const caption = item.caption ? resolveField(item.caption) : null;
+                const isOdd    = i % 2 === 1;
+                const caption  = item.caption ? resolveField(item.caption) : null;
+                const marginLeft  = isOdd ? 'clamp(5%,12vw,18%)' : '0';
+                const marginRight = isOdd ? '0' : 'clamp(5%,12vw,18%)';
 
                 return (
                   <Reveal key={i} delay={i * 0.07}>
-                    <div style={{ width: '100%' }}>
+                    <div style={{ marginLeft, marginRight }}>
                       <ParallaxImage
                         src={item.url}
                         alt={`${resolveField(project.title)} — ${i + 1}`}
@@ -315,7 +310,7 @@ export const ProjectDetail = () => {
       {/* ══ IMPACT ══ */}
       {(keyResult || conclusion) && (
         <>
-          <section className="project-grid" style={{ maxWidth: '1400px', margin: 'clamp(8rem, 14vw, 16rem) auto', padding: '0 clamp(2rem,6vw,6rem) clamp(7rem,13vw,15rem)' }}>
+          <section style={{ maxWidth: '1400px', margin: 'clamp(8rem, 14vw, 16rem) auto', padding: '0 clamp(2rem,6vw,6rem) clamp(7rem,13vw,15rem)' }}>
             <div style={{ display: 'grid', gridTemplateColumns: '4fr 8fr', gap: '0', alignItems: 'start' }}>
               <Reveal>
                 <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase', color: 'var(--sepia)', paddingTop: '0.8rem' }}>
@@ -373,9 +368,7 @@ export const ProjectDetail = () => {
       {/* Mobile grid fix */}
       <style>{`
         @media (max-width: 768px) {
-          .project-grid { display: flex !important; flex-direction: column !important; gap: 3rem !important; }
-          .project-grid > div { display: flex !important; flex-direction: column !important; padding-left: 0 !important; }
-          .project-grid [style*="position: sticky"] { position: relative !important; top: 0 !important; margin-bottom: 1rem !important; }
+          .project-context-grid { display: flex !important; flex-direction: column !important; gap: 3rem !important; }
         }
       `}</style>
 
