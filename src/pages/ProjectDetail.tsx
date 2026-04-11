@@ -233,7 +233,7 @@ export const ProjectDetail = () => {
       {/* ══ CONTEXT — 12 col grid, Sticky Left ══ */}
       {(challenge || solution) && (
         <>
-          <section style={{ display: 'grid', gridTemplateColumns: '4fr 8fr', gap: '0', maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(1.5rem,5vw,6rem)', marginBottom: 'clamp(5rem,10vw,12rem)' }}>
+          <section style={{ display: 'grid', gridTemplateColumns: '4fr 8fr', gap: '0', maxWidth: '1400px', margin: 'clamp(8rem, 14vw, 16rem) auto clamp(8rem, 14vw, 16rem)', padding: '0 clamp(1.5rem,5vw,6rem)' }}>
             {/* Sticky Left */}
             <div style={{ position: 'sticky', top: '28vh', alignSelf: 'start' }}>
               <Reveal>
@@ -268,7 +268,7 @@ export const ProjectDetail = () => {
       {/* ══ GALLERY — Staggered Large Cards ══ */}
       {gallery.length > 0 && (
         <>
-          <section style={{ padding: '0 clamp(1rem,3vw,3.5rem)', marginBottom: 'clamp(7rem,13vw,16rem)' }}>
+          <section style={{ padding: '0 clamp(1rem,3vw,3.5rem)', margin: 'clamp(8rem, 14vw, 16rem) 0' }}>
             <Reveal>
               <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase', color: 'var(--sepia)', marginBottom: 'clamp(4rem,7vw,8rem)', textAlign: 'center' }}>
                 Visual Showcase
@@ -310,7 +310,7 @@ export const ProjectDetail = () => {
       {/* ══ IMPACT ══ */}
       {(keyResult || conclusion) && (
         <>
-          <section style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(2rem,6vw,6rem) clamp(7rem,13vw,15rem)' }}>
+          <section style={{ maxWidth: '1400px', margin: 'clamp(8rem, 14vw, 16rem) auto', padding: '0 clamp(2rem,6vw,6rem) clamp(7rem,13vw,15rem)' }}>
             <div style={{ display: 'grid', gridTemplateColumns: '4fr 8fr', gap: '0', alignItems: 'start' }}>
               <Reveal>
                 <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase', color: 'var(--sepia)', paddingTop: '0.8rem' }}>
