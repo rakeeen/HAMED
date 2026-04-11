@@ -328,84 +328,69 @@ export const ProjectDetail = () => {
         </section>
       )}
 
-      {/* ══ NEXT / PREV NAVIGATION ══ */}
-      <section style={{ background: 'var(--paper-dark)', borderTop: '2px solid var(--tape)', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
+      {/* ══ NEXT / PREV PROJECT ══ */}
+      <section style={{ borderTop: '2px solid var(--tape)', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', minHeight: '300px' }}>
         {resolvedIndex > 0 ? (
           <div
             onClick={() => navigate(`/project/${projects[resolvedIndex - 1].id}`)}
             style={{ 
-              padding: 'clamp(4rem, 8vw, 10rem) clamp(2rem, 5vw, 6rem)', 
+              padding: 'clamp(3rem,6vw,5rem)', 
               cursor: 'pointer', 
-              borderRight: '1px solid var(--tape)', 
-              transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-              position: 'relative',
-              overflow: 'hidden'
+              borderRight: '1.5px solid var(--tape)', 
+              transition: 'all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1)',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              background: 'transparent'
             }}
             onMouseEnter={e => {
-              e.currentTarget.style.background = 'var(--paper)';
-              e.currentTarget.style.paddingLeft = 'clamp(3rem, 6vw, 7rem)';
+              e.currentTarget.style.background = 'var(--paper-dark)';
+              e.currentTarget.style.paddingLeft = 'clamp(3.5rem, 6.5vw, 5.5rem)';
             }}
             onMouseLeave={e => {
               e.currentTarget.style.background = 'transparent';
-              e.currentTarget.style.paddingLeft = 'clamp(2rem, 5vw, 6rem)';
+              e.currentTarget.style.paddingLeft = 'clamp(3rem, 6vw, 5rem)';
             }}
           >
-            <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.3em', textTransform: 'uppercase', color: 'var(--sepia)', marginBottom: '1.5rem' }}>
+            <span style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'var(--sepia)', marginBottom: '1rem' }}>
               ← Previous Case
-            </p>
-            <h3 style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(2rem, 4.5vw, 3.5rem)', fontWeight: 900, color: 'var(--ink)', lineHeight: 1.1, maxWidth: '400px' }}>
+            </span>
+            <h3 style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 800, color: 'var(--ink)', lineHeight: 1.1 }}>
               {resolveField(projects[resolvedIndex - 1].title)}
             </h3>
           </div>
-        ) : <div style={{ background: 'var(--paper-dark)', borderRight: '1px solid var(--tape)' }} />}
+        ) : <div style={{ borderRight: '1.5px solid var(--tape)' }} />}
 
         {resolvedIndex < projects.length - 1 ? (
           <div
             onClick={() => navigate(`/project/${projects[resolvedIndex + 1].id}`)}
             style={{ 
-              padding: 'clamp(4rem, 8vw, 10rem) clamp(2rem, 5vw, 6rem)', 
+              padding: 'clamp(3rem,6vw,5rem)', 
               cursor: 'pointer', 
+              transition: 'all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1)',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
               textAlign: 'right',
-              transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-              position: 'relative',
-              overflow: 'hidden'
+              background: 'transparent'
             }}
             onMouseEnter={e => {
-              e.currentTarget.style.background = 'var(--paper)';
-              e.currentTarget.style.paddingRight = 'clamp(3rem, 6vw, 7rem)';
+              e.currentTarget.style.background = 'var(--paper-dark)';
+              e.currentTarget.style.paddingRight = 'clamp(3.5rem, 6.5vw, 5.5rem)';
             }}
             onMouseLeave={e => {
               e.currentTarget.style.background = 'transparent';
-              e.currentTarget.style.paddingRight = 'clamp(2rem, 5vw, 6rem)';
+              e.currentTarget.style.paddingRight = 'clamp(3rem, 6vw, 5rem)';
             }}
           >
-            <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.3em', textTransform: 'uppercase', color: 'var(--sepia)', marginBottom: '1.5rem' }}>
+            <span style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'var(--sepia)', marginBottom: '1rem' }}>
               Next Case →
-            </p>
-            <h3 style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(2rem, 4.5vw, 3.5rem)', fontWeight: 900, color: 'var(--ink)', lineHeight: 1.1, marginLeft: 'auto', maxWidth: '400px' }}>
+            </span>
+            <h3 style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 800, color: 'var(--ink)', lineHeight: 1.1 }}>
               {resolveField(projects[resolvedIndex + 1].title)}
             </h3>
           </div>
-        ) : (
-          <div 
-            onClick={() => navigate('/projects')}
-            style={{ 
-              padding: 'clamp(4rem, 8vw, 10rem) clamp(2rem, 5vw, 6rem)', 
-              cursor: 'pointer', 
-              textAlign: 'right',
-              transition: 'all 0.4s ease'
-            }}
-            onMouseEnter={e => e.currentTarget.style.background = 'var(--paper)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-          >
-            <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.3em', textTransform: 'uppercase', color: 'var(--sepia)', marginBottom: '1.5rem' }}>
-              Back to Overview
-            </p>
-            <h3 style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(2rem, 4.5vw, 3.5rem)', fontWeight: 900, color: 'var(--ink)', lineHeight: 1.1 }}>
-              All Projects
-            </h3>
-          </div>
-        )}
+        ) : <div />}
       </section>
 
       {/* Mobile grid fix */}
