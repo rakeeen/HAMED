@@ -153,25 +153,7 @@ export const ProjectDetail = () => {
       }}
     >
 
-      {/* ══ SMART BACK BUTTON — sketchy style ══ */}
-      <button
-        onClick={() => navigate('/projects')}
-        className="sketchy-btn"
-        style={{
-          position: 'fixed',
-          top: '1.6rem',
-          left: '2rem',
-          zIndex: 999,
-          fontSize: '0.95rem',
-          padding: '0.4rem 1.4rem',
-          transition: 'opacity 0.3s ease, transform 0.3s ease',
-          opacity: backVisible ? 1 : 0,
-          transform: backVisible ? 'translateY(0)' : 'translateY(-14px)',
-          pointerEvents: backVisible ? 'auto' : 'none',
-        }}
-      >
-        ← Back
-      </button>
+
 
       {/* ══ HERO — Full Viewport ══ */}
       <section style={{
@@ -218,25 +200,7 @@ export const ProjectDetail = () => {
         </div>
       </section>
 
-      {/* ══ PROJECT METADATA — Centered ══ */}
-      {([
-        project.client   && ['Client',   resolveField(project.client)],
-        project.role     && ['Role',     resolveField(project.role)],
-        project.duration && ['Timeline', resolveField(project.duration)],
-      ].filter(Boolean) as string[][]).length > 0 && (
-        <section style={{ display: 'flex', justifyContent: 'center', gap: 'clamp(2rem, 6vw, 8rem)', flexWrap: 'wrap', textAlign: 'center', margin: 'clamp(5rem, 10vw, 12rem) auto', padding: '0 2rem' }}>
-          {([
-            project.client   && ['Client',   resolveField(project.client)],
-            project.role     && ['Role',     resolveField(project.role)],
-            project.duration && ['Timeline', resolveField(project.duration)],
-          ].filter(Boolean) as string[][]).map(([k, v]) => (
-            <div key={k}>
-              <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-light)', marginBottom: '0.6rem' }}>{k}</p>
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: '1.1rem', fontWeight: 600, color: 'var(--ink)' }}>{v}</p>
-            </div>
-          ))}
-        </section>
-      )}
+
 
       {/* ══ CONTEXT — 12 col grid, Sticky Left ══ */}
       {(challenge || solution) && (
@@ -245,9 +209,7 @@ export const ProjectDetail = () => {
             {/* Sticky Left */}
             <div style={{ position: 'sticky', top: '28vh', alignSelf: 'start' }}>
               <Reveal>
-                <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase', color: 'var(--sepia)', marginBottom: '1.3rem' }}>
-                  The Context
-                </p>
+
                 <h2 style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(2.5rem,5vw,4.5rem)', fontWeight: 900, lineHeight: 1.0, letterSpacing: '-0.02em', color: 'var(--ink)' }}>
                   The Story
                 </h2>
@@ -344,6 +306,26 @@ export const ProjectDetail = () => {
             </div>
           </section>
         </>
+      )}
+
+      {/* ══ PROJECT METADATA — End of page ══ */}
+      {([
+        project.client   && ['Client',   resolveField(project.client)],
+        project.role     && ['Role',     resolveField(project.role)],
+        project.duration && ['Timeline', resolveField(project.duration)],
+      ].filter(Boolean) as string[][]).length > 0 && (
+        <section style={{ display: 'flex', justifyContent: 'center', gap: 'clamp(2rem, 6vw, 8rem)', flexWrap: 'wrap', textAlign: 'center', margin: 'clamp(6rem, 10vw, 12rem) auto', padding: '0 2rem' }}>
+          {([
+            project.client   && ['Client',   resolveField(project.client)],
+            project.role     && ['Role',     resolveField(project.role)],
+            project.duration && ['Timeline', resolveField(project.duration)],
+          ].filter(Boolean) as string[][]).map(([k, v]) => (
+            <div key={k}>
+              <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-light)', marginBottom: '0.6rem' }}>{k}</p>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '1.15rem', fontWeight: 700, color: 'var(--ink)', textTransform: 'uppercase' }}>{v}</p>
+            </div>
+          ))}
+        </section>
       )}
 
       {/* ══ NEXT / PREV ══ */}

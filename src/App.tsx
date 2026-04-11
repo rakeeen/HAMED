@@ -77,11 +77,11 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="paper-texture" style={{ display: 'flex', flexDirection: 'column' }}>
       {settings?.showCursor !== false && <CustomCursor />}
-      {!isProjectDetail && <Navbar />}
+      <Navbar />
       <main style={{ flexGrow: 1, paddingTop: isProjectDetail ? 0 : 0 }}>
         {children}
       </main>
-      {!isProjectDetail && <Footer />}
+      <Footer />
     </div>
   );
 };
