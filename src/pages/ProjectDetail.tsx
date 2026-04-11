@@ -98,8 +98,8 @@ export const ProjectDetail = () => {
 
       {/* ══ STORY ══ */}
       {(challenge || solution) && (
-        <section style={{ display: 'grid', gridTemplateColumns: '4fr 8fr', gap: '0', maxWidth: '1400px', margin: 'clamp(8rem, 14vw, 16rem) auto clamp(8rem, 14vw, 16rem)', padding: '0 clamp(1.5rem,5vw,6rem)' }}>
-          <div style={{ position: 'sticky', top: '28vh', alignSelf: 'start' }}>
+        <section style={{ display: 'grid', gridTemplateColumns: '4fr 8fr', gap: '0', maxWidth: '1400px', margin: 'clamp(8rem, 14vw, 16rem) auto clamp(4rem, 8vw, 6rem)', padding: '0 clamp(1.5rem,5vw,6rem)' }}>
+          <div style={{ position: 'sticky', top: '22vh', alignSelf: 'start' }}>
             <h2 style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(2.5rem,5vw,4.5rem)', fontWeight: 900, lineHeight: 1.0, letterSpacing: '-0.02em', color: 'var(--ink)' }}>
               The Story
             </h2>
@@ -122,22 +122,20 @@ export const ProjectDetail = () => {
         </section>
       )}
 
-      {/* ══ GALLERY ══ */}
+      {/* ══ GALLERY — Grid Unified ══ */}
       {gallery.length > 0 && (
-        <section style={{ padding: '0 clamp(1rem,3vw,3.5rem)', margin: 'clamp(8rem, 14vw, 16rem) 0' }}>
-          <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase', color: 'var(--sepia)', marginBottom: 'clamp(4rem,7vw,8rem)', textAlign: 'center' }}>
-            Visual Showcase
-          </p>
+        <section style={{ display: 'grid', gridTemplateColumns: '4fr 8fr', gap: '0', maxWidth: '1400px', margin: 'clamp(4rem, 10vw, 12rem) auto', padding: '0 clamp(1.5rem,5vw,6rem)' }}>
+           <div style={{ position: 'sticky', top: '22vh', alignSelf: 'start' }}>
+            <h2 style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(2.5rem,5vw,4.5rem)', fontWeight: 900, lineHeight: 1.0, letterSpacing: '-0.02em', color: 'var(--ink)' }}>
+              Visuals
+            </h2>
+          </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(3rem,6vw,7rem)' }}>
+          <div style={{ padding: '0 0 0 clamp(3rem,6vw,7rem)', display: 'flex', flexDirection: 'column', gap: 'clamp(3rem,6vw,7rem)' }}>
             {gallery.map((item, i) => {
-              const isOdd    = i % 2 === 1;
               const caption  = item.caption ? resolveField(item.caption) : null;
-              const marginLeft  = isOdd ? 'clamp(5%,12vw,18%)' : '0';
-              const marginRight = isOdd ? '0' : 'clamp(5%,12vw,18%)';
-
               return (
-                <div key={i} style={{ marginLeft, marginRight }}>
+                <div key={i}>
                   <div style={{ overflow: 'hidden', borderRadius: 'clamp(12px,2vw,22px)', border: '1.5px solid var(--tape)', boxShadow: '6px 8px 0 rgba(42,32,24,0.1)' }}>
                     <img src={item.url} alt={`${resolveField(project.title)} — ${i + 1}`} style={{ width: '100%', display: 'block', objectFit: 'cover' }} />
                   </div>
@@ -158,12 +156,15 @@ export const ProjectDetail = () => {
 
       {/* ══ IMPACT ══ */}
       {(keyResult || conclusion) && (
-        <section style={{ maxWidth: '1400px', margin: 'clamp(8rem, 14vw, 16rem) auto', padding: '0 clamp(2rem,6vw,6rem) clamp(7rem,13vw,15rem)' }}>
+        <section style={{ maxWidth: '1400px', margin: 'clamp(4rem, 10vw, 12rem) auto clamp(2rem, 5vw, 4rem)', padding: '0 clamp(1.5rem,5vw,6rem)' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '4fr 8fr', gap: '0', alignItems: 'start' }}>
-            <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase', color: 'var(--sepia)', paddingTop: '0.8rem' }}>
-              The Impact
-            </p>
-            <div style={{ paddingLeft: 'clamp(2rem,5vw,6rem)' }}>
+            <div style={{ position: 'sticky', top: '22vh', alignSelf: 'start' }}>
+              <h2 style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(2.5rem,5vw,4.5rem)', fontWeight: 900, lineHeight: 1.0, letterSpacing: '-0.02em', color: 'var(--ink)' }}>
+                Impact
+              </h2>
+            </div>
+            
+            <div style={{ padding: '0 0 0 clamp(3rem,6vw,7rem)' }}>
               {keyResult && (
                 <p style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(4rem,11vw,9rem)', fontWeight: 900, lineHeight: 0.95, letterSpacing: '-0.04em', color: 'var(--ink)', marginBottom: '2.5rem' }}>
                   {keyResult}
@@ -179,8 +180,8 @@ export const ProjectDetail = () => {
         </section>
       )}
 
-      {/* ══ PROJECT METADATA ══ */}
-      <section style={{ display: 'flex', justifyContent: 'center', gap: 'clamp(2rem, 6vw, 8rem)', flexWrap: 'wrap', textAlign: 'center', margin: 'clamp(6rem, 10vw, 12rem) auto', padding: '0 2rem' }}>
+      {/* ══ PROJECT METADATA — Tightened spacing ══ */}
+      <section style={{ display: 'flex', justifyContent: 'center', gap: 'clamp(2rem, 6vw, 8rem)', flexWrap: 'wrap', textAlign: 'center', margin: '3rem auto 6rem', padding: '0 2rem' }}>
           {([
             project.client   && ['Client',   resolveField(project.client)],
             project.role     && ['Role',     resolveField(project.role)],
@@ -193,26 +194,33 @@ export const ProjectDetail = () => {
           ))}
       </section>
 
-      {/* ══ NEXT / PREV — Centered & Simple ══ */}
-      <section style={{ borderTop: '2.5px solid var(--tape)', padding: '5rem 2rem', display: 'flex', justifyContent: 'center', gap: '4rem' }}>
-        {resolvedIndex > 0 && (
-          <button
-            onClick={() => navigate(`/project/${projects[resolvedIndex - 1].id}`)}
-            className="sketchy-btn"
-            style={{ fontSize: '0.8rem', padding: '0.6rem 2rem' }}
-          >
-            ← Previous Project
-          </button>
-        )}
-        {resolvedIndex < projects.length - 1 && (
-          <button
-            onClick={() => navigate(`/project/${projects[resolvedIndex + 1].id}`)}
-            className="sketchy-btn"
-            style={{ fontSize: '0.8rem', padding: '0.6rem 2rem' }}
-          >
-            Next Project →
-          </button>
-        )}
+      {/* ══ NEXT / PREV — Minimalistic Case Study Nav ══ */}
+      <section style={{ borderTop: '2px solid var(--tape)' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
+          {resolvedIndex > 0 ? (
+            <div
+              onClick={() => navigate(`/project/${projects[resolvedIndex - 1].id}`)}
+              style={{ padding: 'clamp(3rem, 6vw, 5.5rem)', cursor: 'pointer', borderRight: '1.5px solid var(--tape)', transition: 'background 0.3s' }}
+              onMouseEnter={e => (e.currentTarget.style.background = 'var(--paper-dark)')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+            >
+              <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'var(--sepia)', marginBottom: '0.8rem' }}>← Previous</p>
+              <h3 style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(1.5rem, 3vw, 2.5rem)', fontWeight: 800, color: 'var(--ink)' }}>{resolveField(projects[resolvedIndex - 1].title)}</h3>
+            </div>
+          ) : <div style={{ borderRight: '1.5px solid var(--tape)' }} />}
+
+          {resolvedIndex < projects.length - 1 ? (
+            <div
+              onClick={() => navigate(`/project/${projects[resolvedIndex + 1].id}`)}
+              style={{ padding: 'clamp(3rem, 6vw, 5.5rem)', cursor: 'pointer', textAlign: 'right', transition: 'background 0.3s' }}
+              onMouseEnter={e => (e.currentTarget.style.background = 'var(--paper-dark)')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+            >
+              <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'var(--sepia)', marginBottom: '0.8rem' }}>Next Chapter →</p>
+              <h3 style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(1.5rem, 3vw, 2.5rem)', fontWeight: 800, color: 'var(--ink)' }}>{resolveField(projects[resolvedIndex + 1].title)}</h3>
+            </div>
+          ) : <div />}
+        </div>
       </section>
 
       {/* Mobile grid fix */}
