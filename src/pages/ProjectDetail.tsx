@@ -7,93 +7,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-/* ─── Animated Line Divider ─── */
-const LineDivider: React.FC = () => {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    gsap.fromTo(el,
-      { scaleX: 0, transformOrigin: 'left center' },
-      {
-        scaleX: 1, duration: 1.4, ease: 'power3.inOut',
-        scrollTrigger: { trigger: el, start: 'top 90%', toggleActions: 'play none none none' },
-      }
-    );
-  }, []);
-  return (
-    <div ref={ref} style={{
-      height: '1.5px',
-      background: 'var(--tape)',
-      margin: 'clamp(4rem,8vw,9rem) 0',
-      transformOrigin: 'left center',
-    }} />
-  );
-};
-
-/* ─── Reveal wrapper ─── */
-const Reveal: React.FC<{ children: React.ReactNode; delay?: number; style?: React.CSSProperties }> = ({ children, delay = 0, style }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    gsap.fromTo(el,
-      { opacity: 0, y: 50 },
-      {
-        opacity: 1, y: 0, duration: 1.0, delay, ease: 'power3.out',
-        scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' },
-      }
-    );
-    return () => ScrollTrigger.getAll().forEach(t => t.kill());
-  }, []);
-  return <div ref={ref} style={style}>{children}</div>;
-};
-
-/* ─── Parallax + Hover Image ─── */
-const ParallaxImage: React.FC<{ src: string; alt: string; style?: React.CSSProperties }> = ({ src, alt, style }) => {
-  const wrapRef = useRef<HTMLDivElement>(null);
-  const imgRef  = useRef<HTMLImageElement>(null);
-  const [hovered, setHovered] = useState(false);
-
-  useEffect(() => {
-    const img  = imgRef.current;
-    const wrap = wrapRef.current;
-    if (!img || !wrap) return;
-    const tl = gsap.to(img, {
-      yPercent: -10, ease: 'none',
-      scrollTrigger: { trigger: wrap, start: 'top bottom', end: 'bottom top', scrub: 1.2 },
-    });
-    return () => { tl.scrollTrigger?.kill(); };
-  }, []);
-
-  return (
-    <div
-      ref={wrapRef}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        overflow: 'hidden',
-        borderRadius: 'clamp(12px,2vw,22px)',
-        border: '1px solid rgba(0,0,0,0.06)',
-        transition: 'transform 0.6s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.6s ease',
-        transform: hovered ? 'scale(1.02)' : 'scale(1)',
-        boxShadow: hovered
-          ? '8px 14px 0 rgba(42,32,24,0.2)'
-          : '4px 8px 0 rgba(42,32,24,0.1)',
-        cursor: 'zoom-in',
-        ...style,
-      }}
-    >
-      <img
-        ref={imgRef}
-        src={src}
-        alt={alt}
-        style={{ width: '100%', display: 'block', objectFit: 'cover', transform: 'scale(1.14)', transformOrigin: 'center' }}
-      />
-    </div>
-  );
-};
-
 /* ══════════════════════════════════════
    MAIN COMPONENT
 ══════════════════════════════════════ */
@@ -102,19 +15,6 @@ export const ProjectDetail = () => {
   const { projects } = useSiteContext();
   const { resolveField } = useLang();
   const navigate = useNavigate();
-
-  /* Smart Back button — hide on scroll-down */
-  const [backVisible, setBackVisible] = useState(true);
-  const lastScroll = useRef(0);
-  useEffect(() => {
-    const onScroll = () => {
-      const y = window.scrollY;
-      setBackVisible(y < lastScroll.current || y < 80);
-      lastScroll.current = y;
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
 
   const projectIndex  = projects.findIndex(p => p.id === id);
   const project       = projectIndex !== -1 ? projects[projectIndex] : projects[0];
@@ -142,7 +42,6 @@ export const ProjectDetail = () => {
   const conclusion = resolveField((project as any).conclusion);
 
   return (
-    /* ← Site primary colour + site fade-in animation */
     <div
       className="fade-in"
       style={{
@@ -152,8 +51,6 @@ export const ProjectDetail = () => {
         overflowX: 'hidden',
       }}
     >
-
-
 
       {/* ══ HERO — Full Viewport ══ */}
       <section style={{
@@ -174,7 +71,6 @@ export const ProjectDetail = () => {
         ) : (
           <div style={{ position: 'absolute', inset: 0, background: 'var(--paper-dark)' }} />
         )}
-        {/* Gradient just at bottom for text legibility */}
         <div style={{
           position: 'absolute', inset: 0, zIndex: 1,
           background: 'linear-gradient(to top, var(--paper) 0%, rgba(0,0,0,0) 55%)',
@@ -200,121 +96,91 @@ export const ProjectDetail = () => {
         </div>
       </section>
 
-
-
-      {/* ══ CONTEXT — 12 col grid, Sticky Left ══ */}
+      {/* ══ STORY ══ */}
       {(challenge || solution) && (
-        <>
-          <section style={{ display: 'grid', gridTemplateColumns: '4fr 8fr', gap: '0', maxWidth: '1400px', margin: 'clamp(8rem, 14vw, 16rem) auto clamp(8rem, 14vw, 16rem)', padding: '0 clamp(1.5rem,5vw,6rem)' }}>
-            {/* Sticky Left */}
-            <div style={{ position: 'sticky', top: '28vh', alignSelf: 'start' }}>
-              <Reveal>
+        <section style={{ display: 'grid', gridTemplateColumns: '4fr 8fr', gap: '0', maxWidth: '1400px', margin: 'clamp(8rem, 14vw, 16rem) auto clamp(8rem, 14vw, 16rem)', padding: '0 clamp(1.5rem,5vw,6rem)' }}>
+          <div style={{ position: 'sticky', top: '28vh', alignSelf: 'start' }}>
+            <h2 style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(2.5rem,5vw,4.5rem)', fontWeight: 900, lineHeight: 1.0, letterSpacing: '-0.02em', color: 'var(--ink)' }}>
+              The Story
+            </h2>
+          </div>
 
-                <h2 style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(2.5rem,5vw,4.5rem)', fontWeight: 900, lineHeight: 1.0, letterSpacing: '-0.02em', color: 'var(--ink)' }}>
-                  The Story
-                </h2>
-              </Reveal>
-            </div>
-
-            {/* Scrolling Right */}
-            <div style={{ padding: '0 0 0 clamp(3rem,6vw,7rem)', display: 'flex', flexDirection: 'column', gap: 'clamp(4rem,8vw,9rem)' }}>
-              {challenge && (
-                <Reveal>
-                  <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--sepia)', marginBottom: '1rem' }}>The Challenge</p>
-                  <p style={{ fontFamily: 'var(--font-body)', fontWeight: 400, fontStyle: 'normal', fontSize: 'clamp(1.05rem,1.8vw,1.2rem)', lineHeight: 1.9, color: 'var(--ink-faded)' }}>{challenge}</p>
-                </Reveal>
-              )}
-              {solution && (
-                <Reveal delay={0.1}>
-                  <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--sepia)', marginBottom: '1rem' }}>The Approach</p>
-                  <p style={{ fontFamily: 'var(--font-body)', fontWeight: 400, fontStyle: 'normal', fontSize: 'clamp(1.05rem,1.8vw,1.2rem)', lineHeight: 1.9, color: 'var(--ink-faded)' }}>{solution}</p>
-                </Reveal>
-              )}
-            </div>
-          </section>
-        </>
+          <div style={{ padding: '0 0 0 clamp(3rem,6vw,7rem)', display: 'flex', flexDirection: 'column', gap: 'clamp(4rem,8vw,9rem)' }}>
+            {challenge && (
+              <div>
+                <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--sepia)', marginBottom: '1rem' }}>The Challenge</p>
+                <p style={{ fontFamily: 'var(--font-body)', fontWeight: 400, fontStyle: 'normal', fontSize: 'clamp(1.05rem,1.8vw,1.2rem)', lineHeight: 1.9, color: 'var(--ink-faded)' }}>{challenge}</p>
+              </div>
+            )}
+            {solution && (
+              <div>
+                <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--sepia)', marginBottom: '1rem' }}>The Approach</p>
+                <p style={{ fontFamily: 'var(--font-body)', fontWeight: 400, fontStyle: 'normal', fontSize: 'clamp(1.05rem,1.8vw,1.2rem)', lineHeight: 1.9, color: 'var(--ink-faded)' }}>{solution}</p>
+              </div>
+            )}
+          </div>
+        </section>
       )}
 
-      {/* ══ GALLERY — Staggered Large Cards ══ */}
+      {/* ══ GALLERY ══ */}
       {gallery.length > 0 && (
-        <>
-          <section style={{ padding: '0 clamp(1rem,3vw,3.5rem)', margin: 'clamp(8rem, 14vw, 16rem) 0' }}>
-            <Reveal>
-              <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase', color: 'var(--sepia)', marginBottom: 'clamp(4rem,7vw,8rem)', textAlign: 'center' }}>
-                Visual Showcase
-              </p>
-            </Reveal>
+        <section style={{ padding: '0 clamp(1rem,3vw,3.5rem)', margin: 'clamp(8rem, 14vw, 16rem) 0' }}>
+          <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase', color: 'var(--sepia)', marginBottom: 'clamp(4rem,7vw,8rem)', textAlign: 'center' }}>
+            Visual Showcase
+          </p>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(3rem,6vw,7rem)' }}>
-              {gallery.map((item, i) => {
-                const isOdd    = i % 2 === 1;
-                const caption  = item.caption ? resolveField(item.caption) : null;
-                const marginLeft  = isOdd ? 'clamp(5%,12vw,18%)' : '0';
-                const marginRight = isOdd ? '0' : 'clamp(5%,12vw,18%)';
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(3rem,6vw,7rem)' }}>
+            {gallery.map((item, i) => {
+              const isOdd    = i % 2 === 1;
+              const caption  = item.caption ? resolveField(item.caption) : null;
+              const marginLeft  = isOdd ? 'clamp(5%,12vw,18%)' : '0';
+              const marginRight = isOdd ? '0' : 'clamp(5%,12vw,18%)';
 
-                return (
-                  <Reveal key={i} delay={i * 0.07}>
-                    <div style={{ marginLeft, marginRight }}>
-                      <ParallaxImage
-                        src={item.url}
-                        alt={`${resolveField(project.title)} — ${i + 1}`}
-                        style={{ aspectRatio: '16/10' }}
-                      />
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginTop: '1.2rem', padding: '0 0.5rem' }}>
-                        {caption && (
-                          <p style={{ fontFamily: 'var(--font-body)', fontStyle: 'italic', fontSize: '0.88rem', lineHeight: 1.7, color: 'var(--ink-light)', maxWidth: '60%' }}>{caption}</p>
-                        )}
-                        <p style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(2rem,4vw,3.5rem)', fontWeight: 900, color: 'var(--ink-light)', opacity: 0.12, marginLeft: 'auto', lineHeight: 1 }}>
-                          {String(i + 1).padStart(2, '0')}
-                        </p>
-                      </div>
-                    </div>
-                  </Reveal>
-                );
-              })}
-            </div>
-          </section>
-        </>
+              return (
+                <div key={i} style={{ marginLeft, marginRight }}>
+                  <div style={{ overflow: 'hidden', borderRadius: 'clamp(12px,2vw,22px)', border: '1.5px solid var(--tape)', boxShadow: '6px 8px 0 rgba(42,32,24,0.1)' }}>
+                    <img src={item.url} alt={`${resolveField(project.title)} — ${i + 1}`} style={{ width: '100%', display: 'block', objectFit: 'cover' }} />
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginTop: '1.2rem', padding: '0 0.5rem' }}>
+                    {caption && (
+                      <p style={{ fontFamily: 'var(--font-body)', fontStyle: 'italic', fontSize: '0.88rem', lineHeight: 1.7, color: 'var(--ink-light)', maxWidth: '60%' }}>{caption}</p>
+                    )}
+                    <p style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(2rem,4vw,3.5rem)', fontWeight: 900, color: 'var(--ink-light)', opacity: 0.12, marginLeft: 'auto', lineHeight: 1 }}>
+                      {String(i + 1).padStart(2, '0')}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
       )}
 
       {/* ══ IMPACT ══ */}
       {(keyResult || conclusion) && (
-        <>
-          <section style={{ maxWidth: '1400px', margin: 'clamp(8rem, 14vw, 16rem) auto', padding: '0 clamp(2rem,6vw,6rem) clamp(7rem,13vw,15rem)' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '4fr 8fr', gap: '0', alignItems: 'start' }}>
-              <Reveal>
-                <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase', color: 'var(--sepia)', paddingTop: '0.8rem' }}>
-                  The Impact
+        <section style={{ maxWidth: '1400px', margin: 'clamp(8rem, 14vw, 16rem) auto', padding: '0 clamp(2rem,6vw,6rem) clamp(7rem,13vw,15rem)' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '4fr 8fr', gap: '0', alignItems: 'start' }}>
+            <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase', color: 'var(--sepia)', paddingTop: '0.8rem' }}>
+              The Impact
+            </p>
+            <div style={{ paddingLeft: 'clamp(2rem,5vw,6rem)' }}>
+              {keyResult && (
+                <p style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(4rem,11vw,9rem)', fontWeight: 900, lineHeight: 0.95, letterSpacing: '-0.04em', color: 'var(--ink)', marginBottom: '2.5rem' }}>
+                  {keyResult}
                 </p>
-              </Reveal>
-              <div style={{ paddingLeft: 'clamp(2rem,5vw,6rem)' }}>
-                {keyResult && (
-                  <Reveal>
-                    <p style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(4rem,11vw,9rem)', fontWeight: 900, lineHeight: 0.95, letterSpacing: '-0.04em', color: 'var(--ink)', marginBottom: '2.5rem' }}>
-                      {keyResult}
-                    </p>
-                  </Reveal>
-                )}
-                {conclusion && (
-                  <Reveal delay={0.15}>
-                    <p style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(1.05rem,2vw,1.35rem)', lineHeight: 1.8, color: 'var(--ink-faded)', maxWidth: '580px' }}>
-                      {conclusion}
-                    </p>
-                  </Reveal>
-                )}
-              </div>
+              )}
+              {conclusion && (
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(1.05rem,2vw,1.35rem)', lineHeight: 1.8, color: 'var(--ink-faded)', maxWidth: '580px' }}>
+                  {conclusion}
+                </p>
+              )}
             </div>
-          </section>
-        </>
+          </div>
+        </section>
       )}
 
-      {/* ══ PROJECT METADATA — End of page ══ */}
-      {([
-        project.client   && ['Client',   resolveField(project.client)],
-        project.role     && ['Role',     resolveField(project.role)],
-        project.duration && ['Timeline', resolveField(project.duration)],
-      ].filter(Boolean) as string[][]).length > 0 && (
-        <section style={{ display: 'flex', justifyContent: 'center', gap: 'clamp(2rem, 6vw, 8rem)', flexWrap: 'wrap', textAlign: 'center', margin: 'clamp(6rem, 10vw, 12rem) auto', padding: '0 2rem' }}>
+      {/* ══ PROJECT METADATA ══ */}
+      <section style={{ display: 'flex', justifyContent: 'center', gap: 'clamp(2rem, 6vw, 8rem)', flexWrap: 'wrap', textAlign: 'center', margin: 'clamp(6rem, 10vw, 12rem) auto', padding: '0 2rem' }}>
           {([
             project.client   && ['Client',   resolveField(project.client)],
             project.role     && ['Role',     resolveField(project.role)],
@@ -325,72 +191,28 @@ export const ProjectDetail = () => {
               <p style={{ fontFamily: 'var(--font-body)', fontSize: '1.15rem', fontWeight: 700, color: 'var(--ink)', textTransform: 'uppercase' }}>{v}</p>
             </div>
           ))}
-        </section>
-      )}
+      </section>
 
-      {/* ══ NEXT / PREV PROJECT ══ */}
-      <section style={{ borderTop: '2px solid var(--tape)', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', minHeight: '300px' }}>
-        {resolvedIndex > 0 ? (
-          <div
+      {/* ══ NEXT / PREV — Centered & Simple ══ */}
+      <section style={{ borderTop: '2.5px solid var(--tape)', padding: '5rem 2rem', display: 'flex', justifyContent: 'center', gap: '4rem' }}>
+        {resolvedIndex > 0 && (
+          <button
             onClick={() => navigate(`/project/${projects[resolvedIndex - 1].id}`)}
-            style={{ 
-              padding: 'clamp(3rem,6vw,5rem)', 
-              cursor: 'pointer', 
-              borderRight: '1.5px solid var(--tape)', 
-              transition: 'all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1)',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              background: 'transparent'
-            }}
-            onMouseEnter={e => {
-              e.currentTarget.style.background = 'var(--paper-dark)';
-              e.currentTarget.style.paddingLeft = 'clamp(3.5rem, 6.5vw, 5.5rem)';
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.background = 'transparent';
-              e.currentTarget.style.paddingLeft = 'clamp(3rem, 6vw, 5rem)';
-            }}
+            className="sketchy-btn"
+            style={{ fontSize: '0.8rem', padding: '0.6rem 2rem' }}
           >
-            <span style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'var(--sepia)', marginBottom: '1rem' }}>
-              ← Previous Case
-            </span>
-            <h3 style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 800, color: 'var(--ink)', lineHeight: 1.1 }}>
-              {resolveField(projects[resolvedIndex - 1].title)}
-            </h3>
-          </div>
-        ) : <div style={{ borderRight: '1.5px solid var(--tape)' }} />}
-
-        {resolvedIndex < projects.length - 1 ? (
-          <div
+            ← Previous Project
+          </button>
+        )}
+        {resolvedIndex < projects.length - 1 && (
+          <button
             onClick={() => navigate(`/project/${projects[resolvedIndex + 1].id}`)}
-            style={{ 
-              padding: 'clamp(3rem,6vw,5rem)', 
-              cursor: 'pointer', 
-              transition: 'all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1)',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              textAlign: 'right',
-              background: 'transparent'
-            }}
-            onMouseEnter={e => {
-              e.currentTarget.style.background = 'var(--paper-dark)';
-              e.currentTarget.style.paddingRight = 'clamp(3.5rem, 6.5vw, 5.5rem)';
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.background = 'transparent';
-              e.currentTarget.style.paddingRight = 'clamp(3rem, 6vw, 5rem)';
-            }}
+            className="sketchy-btn"
+            style={{ fontSize: '0.8rem', padding: '0.6rem 2rem' }}
           >
-            <span style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'var(--sepia)', marginBottom: '1rem' }}>
-              Next Case →
-            </span>
-            <h3 style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 800, color: 'var(--ink)', lineHeight: 1.1 }}>
-              {resolveField(projects[resolvedIndex + 1].title)}
-            </h3>
-          </div>
-        ) : <div />}
+            Next Project →
+          </button>
+        )}
       </section>
 
       {/* Mobile grid fix */}
