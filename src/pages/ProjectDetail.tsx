@@ -195,43 +195,45 @@ export const ProjectDetail = () => {
         {/* Gradient just at bottom for text legibility */}
         <div style={{
           position: 'absolute', inset: 0, zIndex: 1,
-          background: 'linear-gradient(to top, var(--paper) 0%, rgba(0,0,0,0) 50%)',
+          background: 'linear-gradient(to top, var(--paper) 0%, rgba(0,0,0,0) 55%)',
         }} />
 
-        <div style={{ position: 'relative', zIndex: 2, padding: 'clamp(1rem,4vw,4rem)', paddingBottom: '1.5rem', maxWidth: '1000px' }}>
+        <div style={{ position: 'relative', zIndex: 2, padding: 'clamp(2.5rem,7vw,6rem)', paddingBottom: 'clamp(4rem,9vw,7rem)', maxWidth: '1000px' }}>
           <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.28em', textTransform: 'uppercase', color: 'var(--sepia)', marginBottom: '1.2rem' }}>
             {resolveField(project.category)}
           </p>
-          <h1 style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(2.5rem,6vw,5.5rem)', fontWeight: 800, color: 'var(--ink)', lineHeight: 1.0, marginBottom: '1.2rem', letterSpacing: '-0.02em' }}>
+          <h1 style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(2.5rem,7vw,6rem)', fontWeight: 800, color: 'var(--ink)', lineHeight: 1.0, marginBottom: '1.4rem', letterSpacing: '-0.03em' }}>
             {resolveField(project.title)}
           </h1>
           {subtitle && (
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(1rem,1.8vw,1.2rem)', color: 'var(--ink-faded)', maxWidth: '560px', lineHeight: 1.7, marginBottom: project.link ? '2.5rem' : '0' }}>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(1rem,2vw,1.3rem)', color: 'var(--ink-faded)', maxWidth: '560px', lineHeight: 1.7, marginBottom: '2.5rem' }}>
               {subtitle}
             </p>
           )}
           {project.link && (
-            <a href={project.link} target="_blank" rel="noreferrer" className="sketchy-btn" style={{ display: 'inline-block', marginBottom: '0.5rem', textDecoration: 'none', fontSize: '0.9rem' }}>
+            <a href={project.link} target="_blank" rel="noreferrer" className="sketchy-btn" style={{ display: 'inline-block', marginTop: '1rem', textDecoration: 'none', fontSize: '0.9rem' }}>
               View Live →
             </a>
           )}
         </div>
       </section>
 
-      {/* ══ METADATA (Centered Below Hero) ══ */}
-      {(project.client || project.role || project.duration) && (
-        <section style={{ display: 'flex', justifyContent: 'center', gap: 'clamp(3rem, 8vw, 8rem)', flexWrap: 'wrap', padding: 'clamp(4rem, 8vw, 6rem) 1rem', textAlign: 'center', borderBottom: '1px dashed var(--tape)', margin: '0 clamp(1rem, 5vw, 6rem)' }}>
+      {/* ══ PROJECT METADATA — Centered ══ */}
+      {([
+        project.client   && ['Client',   resolveField(project.client)],
+        project.role     && ['Role',     resolveField(project.role)],
+        project.duration && ['Timeline', resolveField(project.duration)],
+      ].filter(Boolean) as string[][]).length > 0 && (
+        <section style={{ display: 'flex', justifyContent: 'center', gap: 'clamp(2rem, 6vw, 8rem)', flexWrap: 'wrap', textAlign: 'center', margin: 'clamp(5rem, 10vw, 12rem) auto', padding: '0 2rem' }}>
           {([
             project.client   && ['Client',   resolveField(project.client)],
             project.role     && ['Role',     resolveField(project.role)],
             project.duration && ['Timeline', resolveField(project.duration)],
           ].filter(Boolean) as string[][]).map(([k, v]) => (
-            <Reveal key={k}>
-              <div style={{ padding: '0 1rem' }}>
-                <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-light)', marginBottom: '0.6rem' }}>{k}</p>
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: '1.05rem', fontWeight: 600, color: 'var(--ink)' }}>{v}</p>
-              </div>
-            </Reveal>
+            <div key={k}>
+              <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-light)', marginBottom: '0.6rem' }}>{k}</p>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '1.1rem', fontWeight: 600, color: 'var(--ink)' }}>{v}</p>
+            </div>
           ))}
         </section>
       )}
@@ -247,7 +249,7 @@ export const ProjectDetail = () => {
                   The Context
                 </p>
                 <h2 style={{ fontFamily: 'var(--font-sketch)', fontSize: 'clamp(2.5rem,5vw,4.5rem)', fontWeight: 900, lineHeight: 1.0, letterSpacing: '-0.02em', color: 'var(--ink)' }}>
-                  Why this<br />project?
+                  The Story
                 </h2>
               </Reveal>
             </div>
@@ -257,13 +259,13 @@ export const ProjectDetail = () => {
               {challenge && (
                 <Reveal>
                   <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--sepia)', marginBottom: '1rem' }}>The Challenge</p>
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(1.05rem,1.8vw,1.2rem)', lineHeight: 1.9, color: 'var(--ink-faded)' }}>{challenge}</p>
+                  <p style={{ fontFamily: 'var(--font-body)', fontWeight: 400, fontStyle: 'normal', fontSize: 'clamp(1.05rem,1.8vw,1.2rem)', lineHeight: 1.9, color: 'var(--ink-faded)' }}>{challenge}</p>
                 </Reveal>
               )}
               {solution && (
                 <Reveal delay={0.1}>
                   <p style={{ fontFamily: 'var(--font-sketch)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--sepia)', marginBottom: '1rem' }}>The Approach</p>
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(1.05rem,1.8vw,1.2rem)', lineHeight: 1.9, color: 'var(--ink-faded)' }}>{solution}</p>
+                  <p style={{ fontFamily: 'var(--font-body)', fontWeight: 400, fontStyle: 'normal', fontSize: 'clamp(1.05rem,1.8vw,1.2rem)', lineHeight: 1.9, color: 'var(--ink-faded)' }}>{solution}</p>
                 </Reveal>
               )}
             </div>
