@@ -26,7 +26,7 @@ export const About = () => {
                {t('behindPixels')}
              </h1>
              <p style={{ fontFamily: "var(--font-body)", fontSize: "1.1rem", lineHeight: 1.8, color: "var(--ink-faded)", maxWidth: "800px" }}>
-               {resolveField(siteConfig.summary)}
+               {resolveField(siteConfig.detailed_summary) || resolveField(siteConfig.summary)}
              </p>
            </div>
         </div>
